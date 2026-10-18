@@ -1,0 +1,146 @@
+# ============================================================
+# ChainTrust – Agent Definitions
+# ============================================================
+# Add/remove agents freely.  Secrets go in .env, not here.
+#
+# Required fields per agent:
+#   name        – human label (unique)
+#   provider    – gemini | groq | openrouter | ollama
+#   model       – exact model ID as accepted by that provider's API
+#   system_prompt
+#   temperature – float in [0, 2]
+#   max_tokens  – int
+#
+# Optional:
+#   stake       – integer (default 0) used in TraceRank rater weighting
+#   enabled     – bool (default true); set false to skip without deleting
+#   rate_limits – override global defaults per agent
+#
+# The config_hash is computed and stored at registration time;
+# do NOT set it here.
+# ============================================================
+
+agents:
+
+  # ── Google Gemini ─────────────────────────────────────────
+  - name: "gemini-flash-default"
+    provider: gemini
+    model: "gemini-2.5-flash"
+    system_prompt: >
+      You are an expert Python programmer.
+      When given a coding problem, output ONLY a Python code block
+      containing the complete function implementation.
+      Do not include any explanation outside the code block.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 10
+    enabled: true
+
+  - name: "gemini-flash-creative"
+    provider: gemini
+    model: "gemini-2.5-flash"
+    system_prompt: >
+      You are a creative Python programmer who explores multiple approaches.
+      Output ONLY a Python code block with your best solution.
+    temperature: 0.8
+    max_tokens: 1024
+    stake: 10
+    enabled: true
+
+  # ── Groq (fast inference, free tier) ──────────────────────
+  - name: "llama3-groq-default"
+    provider: groq
+    model: "openai/gpt-oss-20b"
+    system_prompt: >
+      You are an expert Python programmer.
+      Respond with ONLY a Python code block containing the complete solution.
+      No preamble, no explanation after the block.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 8
+    enabled: true
+    rate_limits:
+      requests_per_minute: 30
+      requests_per_day: 14400           # Groq free tier limit
+
+  - name: "llama3-groq-conservative"
+    provider: groq
+    model: "openai/gpt-oss-20b"
+    system_prompt: >
+      You are a careful Python programmer who writes safe, readable code.
+      Output ONLY a Python code block. No extra text.
+    temperature: 0.0
+    max_tokens: 1024
+    stake: 8
+    enabled: true
+    rate_limits:
+      requests_per_minute: 30
+      requests_per_day: 14400
+
+  # ── OpenRouter (free models) ───────────────────────────────
+  - name: "mistral-openrouter"
+    provider: openrouter
+    model: "mistralai/mistral-7b-instruct:free"
+    system_prompt: >
+      You are an expert Python programmer.
+      Output ONLY a Python code block with the complete function.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 6
+    enabled: true
+    rate_limits:
+      requests_per_minute: 10
+      requests_per_day: 200
+
+  - name: "phi3-openrouter"
+    provider: openrouter
+    model: "microsoft/phi-3-mini-128k-instruct:free"
+    system_prompt: >
+      You are a Python coding assistant.
+      Respond with ONLY the Python function inside a code block.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 4
+    enabled: true
+    rate_limits:
+      requests_per_minute: 10
+      requests_per_day: 200
+
+  # ── Ollama (local models, no API key needed) ───────────────
+  # Requires: ollama serve && ollama pull <model>
+  - name: "qwen25-coder-ollama"
+    provider: ollama
+    model: "qwen2.5-coder:7b"
+    system_prompt: >
+      You are an expert Python programmer.
+      Output ONLY a Python code block with the complete solution.
+    temperature: 0.2
+    max_tokens: 2048
+    stake: 9
+    enabled: false                        # enable after: ollama pull qwen2.5-coder:7b
+
+  - name: "deepseek-coder-ollama"
+    provider: ollama
+    model: "deepseek-coder:6.7b"
+    system_prompt: >
+      You are a precise Python coding expert.
+      Respond with ONLY a fenced Python code block. Nothing else.
+    temperature: 0.1
+    max_tokens: 2048
+    stake: 9
+    enabled: false                        # enable after: ollama pull deepseek-coder:6.7b
+
+  # ── Sybil clones (used in Experiment C) ───────────────────
+  # Same model, different agent_id, low/zero stake.
+  # These are registered programmatically by the Sybil experiment,
+  # but can also be listed here for manual testing.
+  - name: "sybil-clone-gemini-0"
+    provider: gemini
+    model: "gemini-1.5-flash-latest"
+    system_prompt: >
+      You are an expert Python programmer.
+      Output ONLY a Python code block with the complete solution.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 0
+    enabled: false                        # enabled only during Experiment C

@@ -1,0 +1,129 @@
+# ============================================================
+# ChainTrust – Main Configuration
+# ============================================================
+# All secrets (API keys, RPC endpoints) MUST go in .env, never here.
+
+project:
+  name: ChainTrust
+  version: "0.1.0"
+  random_seed: 42
+  log_level: "INFO"          # DEBUG | INFO | WARNING | ERROR
+
+# ------------------------------------------------------------------
+# Database
+# ------------------------------------------------------------------
+database:
+  url: "sqlite:///chaintrust.db"   # relative to project root
+  echo: false                       # set true for SQL debug logs
+
+# ------------------------------------------------------------------
+# Task bank
+# ------------------------------------------------------------------
+tasks:
+  sources:                          # which benchmark suites to load
+    - humaneval
+    - mbpp
+  subset_size: 100                  # tasks to load per source (null = all)
+  evalplus: true                    # prefer EvalPlus variants if available
+  data_dir: "data/tasks"            # local cache of downloaded datasets
+
+# ------------------------------------------------------------------
+# Runner
+# ------------------------------------------------------------------
+runner:
+  attempts_per_task: 3              # N independent attempts per (agent, task)
+  max_workers: 4                    # thread-pool size for concurrent agent calls
+  code_extraction_strategy: "fence_first"  # fence_first | any_block | heuristic
+
+  # Per-provider rate limits (override per provider in agents.yaml)
+  default_rate_limits:
+    requests_per_minute: 10
+    requests_per_day: 1000
+
+  retry:
+    max_attempts: 5
+    base_delay_s: 2.0               # first wait = base_delay
+    max_delay_s: 120.0
+    backoff_factor: 2.0             # wait doubles each retry
+
+  queue_poll_interval_s: 2         # how often the runner checks for pending jobs
+
+# ------------------------------------------------------------------
+# Grader (Docker sandbox)
+# ------------------------------------------------------------------
+grader:
+  image: "python:3.11-slim"         # Docker image for sandbox
+  timeout_s: 10                     # wall-clock timeout per test run
+  cpu_count: 1
+  mem_limit: "256m"
+  network_disabled: true
+  tmp_dir: "/tmp/chaintrust_sandbox" # host-side tmp (auto-cleaned)
+
+# ------------------------------------------------------------------
+# Reputation engine
+# ------------------------------------------------------------------
+reputation:
+  epoch_size: 50                    # interactions per epoch (or use "daily")
+  rounding_decimals: 6              # fixed rounding for determinism
+
+  tracerank:
+    lambda_decay: 0.1               # time-decay rate λ (per day)
+    difficulty_min: 0.1
+    difficulty_max: 1.0
+    difficulty_smoothing: 1.0       # Laplace smoothing denominator
+    consistency_weight: 0.3         # weight of consistency penalty (0 = off)
+    stake_fn: "log1p"               # sublinear stake scaling function
+    propagation_iterations: 20      # iterations for rater-trust propagation
+    convergence_tol: 1e-6
+
+  weighted_history:
+    half_life_days: 30.0            # for exponential weighting baseline
+
+  pagerank:
+    alpha: 0.85
+    max_iter: 100
+
+  eigentrust:
+    alpha: 0.1                      # pre-trust weight
+    max_iter: 100
+    tol: 1e-6
+
+# ------------------------------------------------------------------
+# Merkle anchoring
+# ------------------------------------------------------------------
+anchoring:
+  hash_fn: "keccak256"
+  epoch_trigger: "interaction_count"  # interaction_count | daily
+  epoch_size: 50                       # anchors every N interactions
+  bundle_dir: "data/bundles"
+
+# ------------------------------------------------------------------
+# Smart contract (set real values after deployment)
+# ------------------------------------------------------------------
+contract:
+  network: "local"                  # local | sepolia
+  local_rpc: "http://127.0.0.1:8545"
+  chain_id: 31337                   # Hardhat default
+  # contract_address and deployer_key come from .env
+
+# ------------------------------------------------------------------
+# Experiments
+# ------------------------------------------------------------------
+experiments:
+  output_dir: "data/experiments"
+  sybil_clone_counts: [0, 5, 10, 20]
+  top_k: 3                          # honest agents that must stay in top-k
+
+# ------------------------------------------------------------------
+# API
+# ------------------------------------------------------------------
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+
+# ------------------------------------------------------------------
+# Dashboard
+# ------------------------------------------------------------------
+dashboard:
+  port: 8501

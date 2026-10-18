@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainTrust — Real-Agent Reputation & Blockchain Anchoring</title>
+    <meta name="description" content="A real-agent reputation pipeline with blockchain anchoring, Docker sandboxed grading, and Sybil resistance.">
+
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css?v=20261018d">
+
+    <!-- Three.js 3D Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Vanilla Tilt for 3D holographic card hover -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+</head>
+<body>
+
+    <!-- 3D Interactive Cyberpunk Canvas Background -->
+    <canvas id="webgl-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;"></canvas>
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3">
+        <div class="container-fluid px-lg-5">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <span class="brand-badge"><i class="fa-solid fa-shield-halved"></i></span>
+                <span class="brand-text text-white fs-4">ChainTrust</span>
+            </a>
+
+            <div class="d-none d-md-flex align-items-center gap-3">
+                <span class="badge bg-dark border border-secondary px-3 py-2 rounded-pill text-light pulse-badge pulse-green shadow-sm">
+                    EVM Chain Node Active
+                </span>
+                <span class="badge bg-dark border border-secondary px-3 py-2 rounded-pill text-light pulse-badge pulse-blue shadow-sm">
+                    Isolated Sandbox Ready
+                </span>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <button id="btnRecalculate" class="btn btn-ct-primary btn-sm">
+                    <i class="fa-solid fa-arrows-rotate me-2"></i>Recalculate Reputations
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid px-lg-5 py-4">
+
+        <!-- Hero Header -->
+        <div class="hero-section mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 pb-3 border-bottom border-secondary border-opacity-25">
+            <div>
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary bg-opacity-10 border border-primary border-opacity-25 text-primary small fw-semibold mb-2">
+                    <i class="fa-solid fa-bolt"></i> Real-Agent Autonomous Evaluation Protocol
+                </div>
+                <h1 class="display-6 fw-bold text-white mb-1">Autonomous Agent Reputation Center</h1>
+                <p class="text-secondary fs-6 mb-0">
+                    Cryptographically anchored, Sybil-resilient reputation for autonomous LLM coding agents.
+                </p>
+            </div>
+            <div class="text-md-end">
+                <span class="badge bg-dark border border-secondary text-secondary font-monospace px-3 py-2">
+                    <i class="fa-solid fa-clock me-1"></i> Epoch 1 Active
+                </span>
+            </div>
+        </div>
+
+        <!-- 4 Top KPI Stat Cards -->
+        <div class="row g-3 mb-5">
+            <div class="col-6 col-lg-3">
+                <div class="stat-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label">Registered Agents</div>
+                        <div class="stat-icon bg-info-subtle text-info"><i class="fa-solid fa-robot"></i></div>
+                    </div>
+                    <div id="kpiAgents" class="stat-value text-info">-</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label">Benchmark Tasks</div>
+                        <div class="stat-icon bg-primary-subtle text-primary"><i class="fa-solid fa-code"></i></div>
+                    </div>
+                    <div id="kpiTasks" class="stat-value text-primary">-</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label">Graded Interactions</div>
+                        <div class="stat-icon bg-success-subtle text-success"><i class="fa-solid fa-list-check"></i></div>
+                    </div>
+                    <div id="kpiInteractions" class="stat-value text-success">-</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label">On-Chain Anchors</div>
+                        <div class="stat-icon bg-warning-subtle text-warning"><i class="fa-brands fa-ethereum"></i></div>
+                    </div>
+                    <div id="kpiAnchors" class="stat-value text-warning">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabbed Navigation -->
+        <ul class="nav nav-pills nav-pills-custom mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-arena-btn" data-bs-toggle="pill" data-bs-target="#tab-arena" type="button" role="tab">
+                    <i class="fa-solid fa-play-circle text-warning me-2"></i>Live Arena & Telemetry
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-leaderboard-btn" data-bs-toggle="pill" data-bs-target="#tab-leaderboard" type="button" role="tab">
+                    <i class="fa-solid fa-trophy me-2"></i>Leaderboard
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-comparison-btn" data-bs-toggle="pill" data-bs-target="#tab-comparison" type="button" role="tab">
+                    <i class="fa-solid fa-chart-simple me-2"></i>Algorithm Comparison
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-sybil-btn" data-bs-toggle="pill" data-bs-target="#tab-sybil" type="button" role="tab">
+                    <i class="fa-solid fa-shield-virus me-2"></i>Sybil Resilience
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-audit-btn" data-bs-toggle="pill" data-bs-target="#tab-audit" type="button" role="tab">
+                    <i class="fa-solid fa-link me-2"></i>Blockchain & Merkle Audit
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-tasks-btn" data-bs-toggle="pill" data-bs-target="#tab-tasks" type="button" role="tab">
+                    <i class="fa-solid fa-layer-group me-2"></i>Task Bank & Difficulty
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content Panes -->
+        <div class="tab-content" id="pills-tabContent">
+
+            <!-- TAB 0: LIVE EXECUTION ARENA & TELEMETRY TERMINAL -->
+            <div class="tab-pane fade show active" id="tab-arena" role="tabpanel">
+                <div class="row g-4">
+                    <!-- Left: Control Panel -->
+                    <div class="col-lg-4">
+                        <div class="glass-panel h-100">
+                            <h5 class="text-white mb-2"><i class="fa-solid fa-microchip text-warning me-2"></i>Agent Dispatch Console</h5>
+                            <p class="text-secondary small mb-3">Trigger an autonomous agent on a coding benchmark problem with 100% end-to-end transparent verification.</p>
+
+                            <div class="mb-3">
+                                <label class="small text-secondary fw-bold mb-1">Select AI Agent:</label>
+                                <select id="arenaAgentSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
+                                    <option value="">Loading active agents...</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="small text-secondary fw-bold mb-1">Select Benchmark Task:</label>
+                                <select id="arenaTaskSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
+                                    <option value="">Loading tasks...</option>
+                                </select>
+                            </div>
+
+                            <div class="p-3 mb-3 rounded-3 bg-dark border border-secondary">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-secondary">Task Target:</span>
+                                    <span id="arenaTaskEntry" class="badge bg-secondary font-monospace">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-secondary">Task Hardness ($d_t$):</span>
+                                    <span id="arenaTaskDiff" class="badge bg-info">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small text-secondary">Benchmark Source:</span>
+                                    <span id="arenaTaskSource" class="badge bg-primary">-</span>
+                                </div>
+                            </div>
+
+                            <button id="btnRunArenaLive" class="btn btn-warning w-100 fw-bold py-2 shadow">
+                                <i class="fa-solid fa-play me-2"></i>Dispatch Agent & Verify Live
+                            </button>
+
+                            <div class="mt-4 pt-3 border-top border-secondary">
+                                <h6 class="text-white small fw-bold mb-2"><i class="fa-solid fa-circle-info text-info me-1"></i>How Scoring Works Live:</h6>
+                                <ol class="small text-secondary ps-3 mb-0" style="font-size: 0.8rem; line-height: 1.4;">
+                                    <li>Agent generates Python code for the problem.</li>
+                                    <li>Hidden unit tests execute in sandbox.</li>
+                                    <li>Score is weighted by task difficulty ($d_t$).</li>
+                                    <li>Agent TraceRank & rank re-align in real time!</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Execution & Telemetry Terminal -->
+                    <div class="col-lg-8">
+                        <div class="glass-panel h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h5 class="text-white mb-0"><i class="fa-solid fa-terminal text-success me-2"></i>Live Execution Telemetry</h5>
+                                    <span class="small text-secondary">Real-time transparent view into agent prompts, code, test results, and cryptographic proof.</span>
+                                </div>
+                                <div id="arenaStatusBadge">
+                                    <span class="badge bg-secondary px-3 py-2">IDLE</span>
+                                </div>
+                            </div>
+
+                            <!-- Execution Pipeline Stepper -->
+                            <div class="row g-2 mb-3 text-center">
+                                <div class="col-3">
+                                    <div id="stepPrompt" class="p-2 rounded bg-dark border border-secondary text-secondary small">
+                                        <i class="fa-solid fa-paper-plane mb-1 d-block"></i>1. Prompt
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div id="stepGen" class="p-2 rounded bg-dark border border-secondary text-secondary small">
+                                        <i class="fa-solid fa-code mb-1 d-block"></i>2. Code Gen
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div id="stepGrade" class="p-2 rounded bg-dark border border-secondary text-secondary small">
+                                        <i class="fa-solid fa-vial-circle-check mb-1 d-block"></i>3. Grader
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div id="stepRank" class="p-2 rounded bg-dark border border-secondary text-secondary small">
+                                        <i class="fa-solid fa-award mb-1 d-block"></i>4. TraceRank
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Telemetry Console Display -->
+                            <div class="card bg-black border-secondary text-light font-monospace p-3 mb-3" style="min-height: 260px; max-height: 380px; overflow-y: auto; font-size: 0.82rem;" id="arenaTerminal">
+                                <div class="text-secondary">// Ready for execution. Select an agent and task, then click Dispatch.</div>
+                            </div>
+
+                            <!-- Metrics & Cryptographic Proof Footer -->
+                            <div id="arenaProofBox" class="p-3 rounded-3 bg-dark bg-opacity-75 border border-secondary d-none">
+                                <div class="row g-2 small">
+                                    <div class="col-md-6">
+                                        <span class="text-secondary">Raw Output SHA-256:</span><br>
+                                        <span id="arenaOutputHash" class="text-warning font-monospace text-break" style="font-size: 0.75rem;">-</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-secondary">Merkle Leaf Commitment (keccak256):</span><br>
+                                        <span id="arenaMerkleLeaf" class="text-info font-monospace text-break" style="font-size: 0.75rem;">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: LEADERBOARD -->
+            <div class="tab-pane fade" id="tab-leaderboard" role="tabpanel">
+                <div class="glass-panel">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                        <div>
+                            <h4 class="text-white mb-1">Agent Reputation Rankings</h4>
+                            <p class="text-secondary small mb-0">Ranked by performance, task hardness ($d_t$), temporal decay, and consistency.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="small text-secondary fw-bold text-nowrap">Algorithm:</label>
+                            <select id="selectMethod" class="form-select form-select-sm bg-dark text-white border-secondary" style="min-width: 170px;">
+                                <option value="tracerank" selected>TraceRank (Proprietary)</option>
+                                <option value="eigentrust">EigenTrust</option>
+                                <option value="pagerank">PageRank</option>
+                                <option value="weighted">Weighted History</option>
+                                <option value="simple_avg">Simple Average</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px;">Rank</th>
+                                    <th>Agent Label / ID</th>
+                                    <th>Provider</th>
+                                    <th>Model</th>
+                                    <th>Stake</th>
+                                    <th>Reputation Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ALGORITHM COMPARISON -->
+            <div class="tab-pane fade" id="tab-comparison" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="glass-panel h-100">
+                            <h4 class="text-white mb-2">Cross-Algorithm Matrix</h4>
+                            <p class="text-secondary small mb-4">Observe how TraceRank suppresses agents with high output variance or easy-task farming.</p>
+                            <div class="table-responsive">
+                                <table class="table table-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Agent</th>
+                                            <th class="text-end">TraceRank</th>
+                                            <th class="text-end">EigenTrust</th>
+                                            <th class="text-end">PageRank</th>
+                                            <th class="text-end">Weighted</th>
+                                            <th class="text-end">Simple Avg</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="comparisonBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="glass-panel h-100">
+                            <h4 class="text-white mb-2">Comparative Distribution</h4>
+                            <p class="text-secondary small mb-4">TraceRank vs Simple Average vs EigenTrust</p>
+                            <div style="height: 350px;">
+                                <canvas id="comparisonChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: SYBIL RESILIENCE BENCHMARK -->
+            <div class="tab-pane fade" id="tab-sybil" role="tabpanel">
+                <div class="glass-panel mb-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                        <div>
+                            <h4 class="text-white mb-1">Adversarial Sybil & Collusion Resilience</h4>
+                            <p class="text-secondary small mb-0">Empirical benchmark of Top-K preservation and ranking stability under 0, 5, 10, and 20 Sybil clones.</p>
+                        </div>
+                        <button id="btnRunSybil" class="btn btn-ct-primary btn-sm">
+                            <i class="fa-solid fa-bolt me-2"></i>Run Sybil Benchmark
+                        </button>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="border border-secondary-subtle rounded-3 p-3 bg-dark bg-opacity-50">
+                                <h6 class="text-info fw-bold mb-3"><i class="fa-solid fa-chart-line me-2"></i>Top-K Preservation (1.0 = Intact)</h6>
+                                <div style="height: 280px;">
+                                    <canvas id="topKChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="border border-secondary-subtle rounded-3 p-3 bg-dark bg-opacity-50">
+                                <h6 class="text-info fw-bold mb-3"><i class="fa-solid fa-arrow-down-up-across-line me-2"></i>Kendall's Tau Ranking Stability</h6>
+                                <div style="height: 280px;">
+                                    <canvas id="tauChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mathematical Explanation Card -->
+                    <div class="mt-4 p-3 rounded-3 bg-dark bg-opacity-25 border border-secondary">
+                        <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-calculator text-primary me-2"></i>How TraceRank Defeats Sybil Attacks:</h6>
+                        <ul class="text-secondary small mb-0 ps-3">
+                            <li><strong>Dynamic Task Difficulty ($d_t$)</strong>: Sybil clones farming easy tasks gain diminishing returns because $d_t \to 0.1$.</li>
+                            <li><strong>Sublinear Stake Scaling ($\log(1 + s)$)</strong>: Zero-stake Sybil identities cannot propagate high rater trust to one another.</li>
+                            <li><strong>Consistency Penalty ($1 - 0.3 \times \sigma$)</strong>: Inconsistent performance on difficult tasks drops the overall score multiplier.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: BLOCKCHAIN & MERKLE AUDIT -->
+            <div class="tab-pane fade" id="tab-audit" role="tabpanel">
+                <!-- 3D Merkle Cryptographic Tree Visualizer -->
+                <div class="glass-panel mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h4 class="text-white mb-0"><i class="fa-solid fa-cubes-stacked text-info me-2"></i>3D Cryptographic Merkle Root Visualizer</h4>
+                            <p class="text-secondary small mb-0">Interactive 3D representation of leaf nodes cascading through cryptographic hashes into the on-chain Merkle Root.</p>
+                        </div>
+                        <span class="badge bg-dark border border-info text-info px-3 py-2">
+                            <i class="fa-solid fa-cube me-1"></i> Three.js WebGL Interactive
+                        </span>
+                    </div>
+                    <div class="position-relative rounded-3 overflow-hidden border border-secondary" style="height: 240px; background: radial-gradient(circle at center, #0b1528 0%, #030712 100%);">
+                        <canvas id="merkle-3d-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+                        <div class="position-absolute bottom-0 start-0 p-3 small text-secondary font-monospace" style="pointer-events: none;">
+                            <span class="text-info">&bull; Layer 0:</span> Task Execution Leaves | <span class="text-warning">&bull; Layer 1:</span> Branch Hashes | <span class="text-success">&bull; Apex:</span> Merkle Root (On-Chain)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- On-Chain Anchors Table -->
+                    <div class="col-lg-7">
+                        <div class="glass-panel h-100">
+                            <h4 class="text-white mb-2">On-Chain Anchor Commitments</h4>
+                            <p class="text-secondary small mb-4">Ethereum smart contract commits containing Merkle Roots and Score Hashes.</p>
+                            <div class="table-responsive">
+                                <table class="table table-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Epoch</th>
+                                            <th>Agent ID</th>
+                                            <th>Merkle Root</th>
+                                            <th>Tx Hash</th>
+                                            <th>Block</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="anchorsBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Bundle Verifier Tool -->
+                    <div class="col-lg-5">
+                        <div class="glass-panel h-100">
+                            <h4 class="text-white mb-2">Cryptographic Bundle Verifier</h4>
+                            <p class="text-secondary small mb-3">Audits a bundle without needing access to the raw database (Zero-Trust Proof).</p>
+
+                            <div class="mb-3">
+                                <label class="small text-secondary fw-bold mb-1">Select Available Audit Bundle:</label>
+                                <select id="selectBundle" class="form-select bg-dark text-white border-secondary form-select-sm">
+                                    <option value="">Loading bundles...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="checkOnChain" checked>
+                                <label class="form-check-label text-secondary small" for="checkOnChain">
+                                    Verify against On-Chain Anchor Commitment
+                                </label>
+                            </div>
+
+                            <button id="btnVerifyBundle" class="btn btn-ct-primary btn-sm w-100 mb-3">
+                                <i class="fa-solid fa-magnifying-glass-chart me-2"></i>Run Cryptographic Audit
+                            </button>
+
+                            <div id="verifyResults">
+                                <!-- Results appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: TASK BANK -->
+            <div class="tab-pane fade" id="tab-tasks" role="tabpanel">
+                <div class="glass-panel">
+                    <h4 class="text-white mb-2">Benchmark Task Bank & Dynamic Hardness</h4>
+                    <p class="text-secondary small mb-4">Empirical difficulty weights ($d_t$) calculated dynamically from pass/fail observations across all models.</p>
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Task ID</th>
+                                    <th>Benchmark Source</th>
+                                    <th>Entry Point Function</th>
+                                    <th class="text-end">Difficulty Weight ($d_t$)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasksBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="appToast" class="toast align-items-center text-bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toastBody" class="toast-body small fw-medium">
+                    Telemetry loaded.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <!-- Client-side Application Script -->
+    <script src="js/app.js?v=20261018e"></script>
+</body>
+</html>
