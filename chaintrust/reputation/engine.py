@@ -29,7 +29,16 @@ class ReputationEngine:
     Coordinates reputation score calculation across configured algorithms.
     """
 
-    SUPPORTED_METHODS = ["simple_avg", "weighted", "pagerank", "eigentrust", "tracerank"]
+    SUPPORTED_METHODS = [
+        "simple_avg",
+        "weighted",
+        "pagerank",
+        "eigentrust",
+        "tracerank",
+        "chs",
+        "elo",
+        "beta",
+    ]
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or get_config()
@@ -107,6 +116,12 @@ class ReputationEngine:
             }
             all_results[method] = rounded
 
+            # Check if method has a params_hash
+            params_hash = None
+            if method.lower() == "chs":
+                from chaintrust.reputation.chs import load_chs_params
+                _, params_hash = load_chs_params()
+
             # Save to Reputation table
             for aid, score in rounded.items():
                 existing = (
@@ -116,6 +131,8 @@ class ReputationEngine:
                 )
                 if existing:
                     existing.score = score
+                    if params_hash:
+                        existing.params_hash = params_hash
                     existing.computed_at = now
                 else:
                     rep_row = Reputation(
@@ -123,6 +140,7 @@ class ReputationEngine:
                         epoch=epoch,
                         method=method,
                         score=score,
+                        params_hash=params_hash,
                         computed_at=now,
                     )
                     session.add(rep_row)

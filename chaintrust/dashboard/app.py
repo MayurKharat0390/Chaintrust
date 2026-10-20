@@ -196,9 +196,9 @@ with tab1:
     with c1:
         selected_method = st.selectbox(
             "Scoring Algorithm",
-            ["tracerank", "eigentrust", "pagerank", "weighted", "simple_avg"],
+            ["chs", "tracerank", "elo", "beta", "pagerank", "simple_avg"],
             index=0,
-            help="TraceRank uses dynamic difficulty, temporal decay, and sublinear stake rater weighting.",
+            help="CHS combines dynamic difficulty, empirical Bayes shrinkage, trust propagation, and collusion defenses.",
         )
 
     # Filter reputations
@@ -352,10 +352,23 @@ with tab4:
                 st.write(f"**Canonical Record Leaves**: {'✅ Valid' if res.leaves_valid else '❌ Invalid'}")
                 st.write(f"**Merkle Root Integrity**: {'✅ Valid' if res.merkle_root_valid else '❌ Invalid'}")
                 st.write(f"**Inclusion Proofs**: {'✅ Valid' if res.proofs_valid else '❌ Invalid'}")
+                if res.difficulty_root_valid is not None:
+                    st.write(f"**Difficulty Root**: {'✅ Valid' if res.difficulty_root_valid else '❌ Invalid'}")
+                if res.params_hash_valid is not None:
+                    st.write(f"**Params Hash**: {'✅ Valid' if res.params_hash_valid else '❌ Invalid'}")
+                if res.ratings_root_valid is not None:
+                    st.write(f"**Peer Ratings Root (Level B)**: {'✅ Valid' if res.ratings_root_valid else '❌ Invalid'}")
             with r_col2:
                 st.write(f"**Claimed Score**: `{res.claimed_score:.6f}`")
                 st.write(f"**Recomputed Score**: `{res.recomputed_score:.6f}`")
                 st.write(f"**Score Hash Commitment**: {'✅ Valid' if res.score_hash_valid else '❌ Invalid'}")
+                if res.level_a_valid is not None:
+                    st.write(f"**Level A Verification**: {'✅ Valid' if res.level_a_valid else '❌ Invalid'}")
+                if res.level_b_valid is not None:
+                    st.write(f"**Level B Verification**: {'✅ Valid' if res.level_b_valid else '❌ Invalid'}")
+
+            if res.direct_score > 0 or res.confidence > 0:
+                st.info(f"**Recomputed Components**: Direct Evidence $D'$ = {res.direct_score:.4f} | Confidence $C_a$ = {res.confidence:.4f} | Trust $\\tilde{{T}}$ = {res.t_tilde:.4f} | Defense $\\pi$ = {res.defense_penalty:.4f}")
 
             if res.errors:
                 st.error("Errors found:\n" + "\n".join(f"- {e}" for e in res.errors))
@@ -380,3 +393,4 @@ with tab5:
         st.pyplot(fig3)
     else:
         st.info("No tasks loaded in the database.")
+

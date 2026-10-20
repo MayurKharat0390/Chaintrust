@@ -416,3 +416,304 @@ h1, h2, h3, h4, h5, h6, .brand-text {
 .animate-pulse {
     animation: pulseGlow 1.5s infinite;
 }
+
+/* ============================================================
+   Agent Ingress Roster (Quick Select Gallery)
+   ============================================================ */
+.agent-pill-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.agent-pill-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.4);
+    background: rgba(30, 41, 59, 0.8);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2);
+}
+
+.agent-pill-card.active {
+    border-color: #38bdf8;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(15, 23, 42, 0.9) 100%);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+.agent-pill-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.avatar-gemini {
+    background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+    color: white;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.avatar-groq {
+    background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%);
+    color: #111827;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.avatar-openrouter {
+    background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%);
+    color: white;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
+.avatar-openai {
+    background: linear-gradient(135deg, #059669 0%, #34d399 100%);
+    color: white;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================================================
+   3D Cybernetic Agent Holo-Chamber
+   ============================================================ */
+.holo-chamber-card {
+    background: rgba(10, 16, 30, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sci-Fi Glowing Corner Brackets */
+.cyber-bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.cyber-bracket-tl {
+    top: 6px;
+    left: 6px;
+    border-top: 2px solid #38bdf8;
+    border-left: 2px solid #38bdf8;
+    box-shadow: -2px -2px 6px rgba(56, 189, 248, 0.6);
+}
+
+.cyber-bracket-tr {
+    top: 6px;
+    right: 6px;
+    border-top: 2px solid #38bdf8;
+    border-right: 2px solid #38bdf8;
+    box-shadow: 2px -2px 6px rgba(56, 189, 248, 0.6);
+}
+
+.cyber-bracket-bl {
+    bottom: 6px;
+    left: 6px;
+    border-bottom: 2px solid #38bdf8;
+    border-left: 2px solid #38bdf8;
+    box-shadow: -2px 2px 6px rgba(56, 189, 248, 0.6);
+}
+
+.cyber-bracket-br {
+    bottom: 6px;
+    right: 6px;
+    border-bottom: 2px solid #38bdf8;
+    border-right: 2px solid #38bdf8;
+    box-shadow: 2px 2px 6px rgba(56, 189, 248, 0.6);
+}
+
+.holo-hud-top {
+    background: rgba(8, 13, 24, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 5;
+}
+
+.holo-hud-btn {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    font-family: var(--ct-font-heading);
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.holo-hud-btn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.holo-hud-btn.active {
+    background: rgba(56, 189, 248, 0.25);
+    color: #38bdf8;
+    border-color: #38bdf8;
+}
+
+/* Status Indicator Dots */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.status-dot-cyan {
+    background: #38bdf8;
+    box-shadow: 0 0 10px #38bdf8;
+}
+
+.status-dot-green {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-dot-amber {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+/* Holographic Warp Ingress Banner */
+.warp-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 20;
+    animation: warpBannerEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.warp-banner-inner {
+    background: rgba(7, 12, 23, 0.92);
+    border: 2px solid #38bdf8;
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.6), inset 0 0 20px rgba(56, 189, 248, 0.2);
+    color: #f8fafc;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: var(--ct-font-heading);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+@keyframes warpBannerEntrance {
+    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   Dispatch Button Glow & Stepper
+   ============================================================ */
+.btn-dispatch-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-dispatch-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+}
+
+.stepper-step {
+    transition: all 0.3s ease;
+}
+
+/* ============================================================
+   Interactive Code Studio Window
+   ============================================================ */
+.nav-tabs-cyber .nav-link {
+    color: #94a3b8;
+    border: 1px solid transparent;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs-cyber .nav-link:hover {
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.nav-tabs-cyber .nav-link.active {
+    color: #38bdf8;
+    background: rgba(15, 23, 42, 0.95);
+    border-color: rgba(56, 189, 248, 0.3);
+    border-bottom-color: transparent;
+    box-shadow: 0 -4px 15px rgba(56, 189, 248, 0.15);
+}
+
+.code-studio-window {
+    background: #030712;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.code-container pre {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 0.84rem;
+    tab-size: 4;
+}
+
+.typing-caret {
+    display: inline-block;
+    color: #38bdf8;
+    font-weight: bold;
+    animation: caretBlink 0.8s infinite;
+}
+
+@keyframes caretBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.test-case-item {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--ct-font-mono);
+    font-size: 0.82rem;
+    transition: all 0.2s ease;
+}
+
+.test-case-item:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    background: rgba(30, 41, 59, 0.7);
+}
+
+.test-case-passed {
+    border-left: 3px solid #10b981;
+}
+
+.test-case-failed {
+    border-left: 3px solid #ef4444;
+}
+

@@ -1,0 +1,17 @@
+# ChainTrust Hybrid Score (CHS) Parameters
+# Versioned configuration for reproducible reputation calculation.
+# Any modification changes params_hash (SHA-256 of canonical JSON).
+
+version: "1.0.0"
+lambda: 0.023104906018664842  # ln(2)/30: exponential time decay with 30-day half-life
+alpha0: 2.0                   # Prior pseudo-observation strength for task difficulty
+d_min: 0.1                    # Minimum task difficulty weight floor
+m: 5.0                        # Empirical Bayes shrinkage strength to global mean
+beta: 0.85                    # Trust propagation damping factor
+S_cap: 1000.0                 # Economic stake cap for rater trust factor
+w: 0.3                        # Relative weight of the trust propagation layer [0, 1]
+omega: 0.5                    # Consistency exponent on variance penalty
+kappa1: 0.5                   # Defense penalty weight for mutual rating share
+kappa2: 0.3                   # Defense penalty weight for rater concentration (Herfindahl index)
+pi_max: 0.8                   # Maximum allowable defense penalty cap
+N_iter: 50                    # Exactly 50 power iterations (deterministic, no heuristic convergence)

@@ -1,0 +1,954 @@
+{
+  "agents": [
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "family": [
+        "gemini",
+        "gemini-2.5-flash"
+      ],
+      "stake": 10
+    },
+    {
+      "agent_id": "dcfa4379c031c4a92f131135c060e09f",
+      "family": [
+        "gemini",
+        "gemini-2.5-flash"
+      ],
+      "stake": 10
+    },
+    {
+      "agent_id": "c82355aad3c7087f42451b924c3becbb",
+      "family": [
+        "groq",
+        "openai/gpt-oss-20b"
+      ],
+      "stake": 8
+    },
+    {
+      "agent_id": "b61589835d41770b556c9b60527f9393",
+      "family": [
+        "groq",
+        "openai/gpt-oss-20b"
+      ],
+      "stake": 8
+    },
+    {
+      "agent_id": "2d015eea34ca5fcf92a58ca3405201e7",
+      "family": [
+        "openrouter",
+        "mistralai/mistral-7b-instruct:free"
+      ],
+      "stake": 6
+    },
+    {
+      "agent_id": "e549757739cc641fa40d5ead7c9d2334",
+      "family": [
+        "openrouter",
+        "microsoft/phi-3-mini-128k-instruct:free"
+      ],
+      "stake": 4
+    }
+  ],
+  "difficulty_table": [
+    {
+      "difficulty": 0.4,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x79a8df476b4171e88b575fd83545eac83d26da11fc5aebc6148d4c871f524017"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfb4447f3a802451d1984aff0eb63cdc205b56e5402a69209bebbdb2593de278d"
+        },
+        {
+          "position": "right",
+          "sibling": "0x339e55053182cf8a4e06b105d4d02da4aa21b93d7c14527e3fb41911a59933f2"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_0"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x1af1c9acf4850cae12e04cd4fda88437aa4b1ad2d3a78767ccdb8980a143f230"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfb4447f3a802451d1984aff0eb63cdc205b56e5402a69209bebbdb2593de278d"
+        },
+        {
+          "position": "right",
+          "sibling": "0x339e55053182cf8a4e06b105d4d02da4aa21b93d7c14527e3fb41911a59933f2"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_1"
+    },
+    {
+      "difficulty": 0.285714,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0xce15edd01fc914be03dbe9ccd7504509c5046df7ec114ba3742a97791d4c5300"
+        },
+        {
+          "position": "left",
+          "sibling": "0xaf0372bbd0b31df59cf038b1f2812dc837450b41e3c70aa59b43ae4286438bb3"
+        },
+        {
+          "position": "right",
+          "sibling": "0x339e55053182cf8a4e06b105d4d02da4aa21b93d7c14527e3fb41911a59933f2"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_2"
+    },
+    {
+      "difficulty": 0.375,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x9c53ec18dc5e48b0d8d10de3ae4c30c521218edfbfab8a2a0c67c0ed4383017d"
+        },
+        {
+          "position": "left",
+          "sibling": "0xaf0372bbd0b31df59cf038b1f2812dc837450b41e3c70aa59b43ae4286438bb3"
+        },
+        {
+          "position": "right",
+          "sibling": "0x339e55053182cf8a4e06b105d4d02da4aa21b93d7c14527e3fb41911a59933f2"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_3"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x7a47ca895f1d922f34ecf7aad8851208f1aaec6f1780c6f0ddb111a3e767d6d5"
+        },
+        {
+          "position": "right",
+          "sibling": "0x416734ebcd246b24cd530eefdc91fc73bbb4e872aed771d70b62bda97990ba90"
+        },
+        {
+          "position": "left",
+          "sibling": "0x2cff5251549995543e7a4d455c52a417245f2f62895d68a77a30f951b2d306c5"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_4"
+    },
+    {
+      "difficulty": 0.5,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x6b36e88ff6b2c736a4bd60fdb37600be7a166ab7facc7aefc680a43d51a965cb"
+        },
+        {
+          "position": "right",
+          "sibling": "0x416734ebcd246b24cd530eefdc91fc73bbb4e872aed771d70b62bda97990ba90"
+        },
+        {
+          "position": "left",
+          "sibling": "0x2cff5251549995543e7a4d455c52a417245f2f62895d68a77a30f951b2d306c5"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_5"
+    },
+    {
+      "difficulty": 0.428571,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x05342daae3293e369d9372e5c98214be64f2fd00748a242fdcda2ee910a9fefc"
+        },
+        {
+          "position": "left",
+          "sibling": "0x1bd719752f3352ded71c2b5e9c7580883147954db235905e68f6f5499eba7fa5"
+        },
+        {
+          "position": "left",
+          "sibling": "0x2cff5251549995543e7a4d455c52a417245f2f62895d68a77a30f951b2d306c5"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_6"
+    },
+    {
+      "difficulty": 0.642857,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x0e2ece231bce6814d1eda72fc9603244a0111f5dc499253f84e38e68f601eab1"
+        },
+        {
+          "position": "left",
+          "sibling": "0x1bd719752f3352ded71c2b5e9c7580883147954db235905e68f6f5499eba7fa5"
+        },
+        {
+          "position": "left",
+          "sibling": "0x2cff5251549995543e7a4d455c52a417245f2f62895d68a77a30f951b2d306c5"
+        },
+        {
+          "position": "right",
+          "sibling": "0x2f691847c7410f250127c8babbd57b4254f045a7925c974d156db00cfda79c3b"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_7"
+    },
+    {
+      "difficulty": 0.428571,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0xa18c74d68894d6c038f95e849278f2bb96d87f1eed92c806aaf5953d48befeb3"
+        },
+        {
+          "position": "right",
+          "sibling": "0x337d81938bfd816ac535f11853c6a92a6fb470a8af357aa9aeeb4fc86f1ba055"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf9acde355d397b5e1f07b185fcdddbf734441af56e8584e6214170f3298c74f3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_8"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x568cccaeac3bd53261b0763f66be30d7e14a959cc8fd752e24ee09cb3c30d90d"
+        },
+        {
+          "position": "right",
+          "sibling": "0x337d81938bfd816ac535f11853c6a92a6fb470a8af357aa9aeeb4fc86f1ba055"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf9acde355d397b5e1f07b185fcdddbf734441af56e8584e6214170f3298c74f3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/HumanEval_9"
+    },
+    {
+      "difficulty": 0.5,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x63885da66dea082cafb0b5eb94cf9eb4b268e29fafa74d1bf2ac76ee5982cd81"
+        },
+        {
+          "position": "left",
+          "sibling": "0xc784e8c0f549553b35e5277176c1c3f99025d374248cfdfd396262355d4964cb"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf9acde355d397b5e1f07b185fcdddbf734441af56e8584e6214170f3298c74f3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "humaneval/test_pr_0"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x92e3f76b853f95dd86ad38386838da9e83563081bfedf7554a996f802831c82c"
+        },
+        {
+          "position": "left",
+          "sibling": "0xc784e8c0f549553b35e5277176c1c3f99025d374248cfdfd396262355d4964cb"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf9acde355d397b5e1f07b185fcdddbf734441af56e8584e6214170f3298c74f3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "mbpp/mbpp_1"
+    },
+    {
+      "difficulty": 0.642857,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x62d889b5a8a9c99adbe17a1be7882603788bb07be0dd5fbf6540590e936b2821"
+        },
+        {
+          "position": "right",
+          "sibling": "0x4df94d1cc46b755aa07f31ecb617fea6f46dcf075b1eaf93a37807de8f1fcae8"
+        },
+        {
+          "position": "left",
+          "sibling": "0x4fff331aed3907dde4d141d47e134cc25bf6caa7372f75d280ff8b8bdcdbd87f"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "mbpp/mbpp_10"
+    },
+    {
+      "difficulty": 0.428571,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0xdd79c503f58ce1e92e8fceb2bac262e6f8cd5ade9ebc7d8c1afa0d242b531981"
+        },
+        {
+          "position": "right",
+          "sibling": "0x4df94d1cc46b755aa07f31ecb617fea6f46dcf075b1eaf93a37807de8f1fcae8"
+        },
+        {
+          "position": "left",
+          "sibling": "0x4fff331aed3907dde4d141d47e134cc25bf6caa7372f75d280ff8b8bdcdbd87f"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "mbpp/mbpp_2"
+    },
+    {
+      "difficulty": 0.285714,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x173bcf80d4f8b8939471e684133a565f8643dc888e4f888f9782c207a89fa7c3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd9c03c482a7f9d033b8b976eb2e23db03e6cf9d6b62ad8ed843365749500aa8d"
+        },
+        {
+          "position": "left",
+          "sibling": "0x4fff331aed3907dde4d141d47e134cc25bf6caa7372f75d280ff8b8bdcdbd87f"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "mbpp/mbpp_3"
+    },
+    {
+      "difficulty": 0.5,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x9e8fa52b9a6b808573cc09873b0bebfdabe530ff4d8d2dc846012f1f70e102a3"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd9c03c482a7f9d033b8b976eb2e23db03e6cf9d6b62ad8ed843365749500aa8d"
+        },
+        {
+          "position": "left",
+          "sibling": "0x4fff331aed3907dde4d141d47e134cc25bf6caa7372f75d280ff8b8bdcdbd87f"
+        },
+        {
+          "position": "left",
+          "sibling": "0xcd5dda5b9150100bc4b58b27274e723f29437acaea4f00d5e4d721c7f754ffa0"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec07224d4c55b4cc15c2bcd8da4ac526ed51ede2af8880704cabe5b50c12d523"
+        }
+      ],
+      "task_id": "mbpp/mbpp_4"
+    },
+    {
+      "difficulty": 0.571429,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x0f23384d2e9c36aea6bb7f9a5060b0ee5fd4204e4da6bfa93c7c2d8b070cd8ad"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec3ee3cc899142a087bbbbbc6ae1f65291afa4b4eb36471246901d710cd98507"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf4d16cd338b7038c451c5958eea278ec80923f9241a7fe257f1d11ece62ac334"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfc4092cee1cbe4fad2cdcb42f7a22391a33ac66bed1e741b58fe3d2a04bceb2e"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd7e0b8569dcc2ba5f2a704d001db7149079cbaebfc1931c99fabe1ffcb1cc6bc"
+        }
+      ],
+      "task_id": "mbpp/mbpp_5"
+    },
+    {
+      "difficulty": 0.285714,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x429ae8fc04b5bb6660df9320b917677b790e9ecd539385ea6b7f852c308d0f97"
+        },
+        {
+          "position": "right",
+          "sibling": "0xec3ee3cc899142a087bbbbbc6ae1f65291afa4b4eb36471246901d710cd98507"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf4d16cd338b7038c451c5958eea278ec80923f9241a7fe257f1d11ece62ac334"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfc4092cee1cbe4fad2cdcb42f7a22391a33ac66bed1e741b58fe3d2a04bceb2e"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd7e0b8569dcc2ba5f2a704d001db7149079cbaebfc1931c99fabe1ffcb1cc6bc"
+        }
+      ],
+      "task_id": "mbpp/mbpp_6"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0x2b5fb9e1b294707ac255846859a367b39a6f56ce9a6d1e433d8aeea74ecdb7f2"
+        },
+        {
+          "position": "left",
+          "sibling": "0x784d7cb3473167f9c918599170cf997dc844b680b65ae7638d56ab7d0d405753"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf4d16cd338b7038c451c5958eea278ec80923f9241a7fe257f1d11ece62ac334"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfc4092cee1cbe4fad2cdcb42f7a22391a33ac66bed1e741b58fe3d2a04bceb2e"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd7e0b8569dcc2ba5f2a704d001db7149079cbaebfc1931c99fabe1ffcb1cc6bc"
+        }
+      ],
+      "task_id": "mbpp/mbpp_7"
+    },
+    {
+      "difficulty": 0.357143,
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0xc922c0e2616c432a70eb8eb5a215da29db52d973d7555c5762662ae7b11125d0"
+        },
+        {
+          "position": "left",
+          "sibling": "0x784d7cb3473167f9c918599170cf997dc844b680b65ae7638d56ab7d0d405753"
+        },
+        {
+          "position": "right",
+          "sibling": "0xf4d16cd338b7038c451c5958eea278ec80923f9241a7fe257f1d11ece62ac334"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfc4092cee1cbe4fad2cdcb42f7a22391a33ac66bed1e741b58fe3d2a04bceb2e"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd7e0b8569dcc2ba5f2a704d001db7149079cbaebfc1931c99fabe1ffcb1cc6bc"
+        }
+      ],
+      "task_id": "mbpp/mbpp_8"
+    },
+    {
+      "difficulty": 0.714286,
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0xdc254c38fa11e8188260c777b9134f7abbc14b0a074b60ff3850da3810a718a7"
+        },
+        {
+          "position": "right",
+          "sibling": "0x641ad6ced10e6cb7de8784ff442ff823e33a58251f2102da41454dad924946d1"
+        },
+        {
+          "position": "left",
+          "sibling": "0xa3ef08e2d51a465a29440821713552b76ee749dc1ee62a0ff7f5e7132608cd91"
+        },
+        {
+          "position": "right",
+          "sibling": "0xfc4092cee1cbe4fad2cdcb42f7a22391a33ac66bed1e741b58fe3d2a04bceb2e"
+        },
+        {
+          "position": "left",
+          "sibling": "0xd7e0b8569dcc2ba5f2a704d001db7149079cbaebfc1931c99fabe1ffcb1cc6bc"
+        }
+      ],
+      "task_id": "mbpp/mbpp_9"
+    }
+  ],
+  "leaf_hashes": [
+    "0x8264d0a4337cbbc6384a3770b958760e2fedf75505d01f1578af3471f1f3a6ec",
+    "0x6905806a546f7a7f497537034c4387a3f36cf34ac4f0edc797d9bd48c9db1c38",
+    "0x7ab8073c844ab9cf9896ce0b40c041022f8faf26209413368b0d3da992ffb178",
+    "0xc6ef4d774b307509735e615fc756307af6803da3f18edaab5b451ee4cd6aa73f",
+    "0xf51417a022266141013fd6a43425a9b919c862184f1d1f12915175b0603fe887",
+    "0x45072e039349078c4f43085ea1599fd94b99e163edf7d55308d2b2c39341d852",
+    "0x3e9d480a16d73fe1c43efea280e24d760eb97470f53a0b5e7344bfafaecd0a0b",
+    "0x184ad85facbca58c1e0dcf5044a90b18f2d82f6c751f604f39184cd0e7f8e96d"
+  ],
+  "metadata": {
+    "agent_id": "6597c709a6575f75052f0ab798b184f9",
+    "as_of": "2026-10-20T18:17:22.344894+00:00",
+    "confidence": 0.575,
+    "created_at": "2026-10-20T18:17:22.362536+00:00",
+    "defense_penalty": 0.8,
+    "difficulty_root": "0x372bd75c5b8d27e524b1d3bd297d54438dfe0f48ccaeb0403a53a73ce417404d",
+    "direct_score": 0.693313,
+    "epoch": 1,
+    "interaction_count": 8,
+    "merkle_root": "0xc09a0a657e674261d155472f7f20968dc4dc8fdff2a1bb990f45e15132b89ec1",
+    "method": "chs",
+    "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+    "ratings_root": "0x91e4a30a1d789f0b4b25696583823c4e7b26987a3c598b1e4b942cf68498d372",
+    "score": 0.105871,
+    "score_hash": "0x866eeb347870e8a3aedcf0a44cef476999193d571960c6625a64ff0058ed092e",
+    "stake": 0,
+    "t_tilde": 0.709239,
+    "verification_level": "B",
+    "version": "2.0-chs"
+  },
+  "parameters": {
+    "N_iter": 50,
+    "S_cap": 1000.0,
+    "alpha0": 2.0,
+    "beta": 0.85,
+    "d_min": 0.1,
+    "decay_lambda": 0.023104906018664842,
+    "kappa1": 0.5,
+    "kappa2": 0.3,
+    "m": 5.0,
+    "omega": 0.5,
+    "pi_max": 0.8,
+    "version": "1.0.0",
+    "w": 0.3
+  },
+  "proofs": [
+    [
+      {
+        "position": "right",
+        "sibling": "0x6905806a546f7a7f497537034c4387a3f36cf34ac4f0edc797d9bd48c9db1c38"
+      },
+      {
+        "position": "right",
+        "sibling": "0x708656ae361ee6e9559a17e0c8f2ef951afcaf73a2dee9f4e9724b63d1f7077c"
+      },
+      {
+        "position": "right",
+        "sibling": "0x4bf6633655563e25e847f3710cefcecd591c4bbf376d7711eeb4269b4f1525c8"
+      }
+    ],
+    [
+      {
+        "position": "left",
+        "sibling": "0x8264d0a4337cbbc6384a3770b958760e2fedf75505d01f1578af3471f1f3a6ec"
+      },
+      {
+        "position": "right",
+        "sibling": "0x708656ae361ee6e9559a17e0c8f2ef951afcaf73a2dee9f4e9724b63d1f7077c"
+      },
+      {
+        "position": "right",
+        "sibling": "0x4bf6633655563e25e847f3710cefcecd591c4bbf376d7711eeb4269b4f1525c8"
+      }
+    ],
+    [
+      {
+        "position": "right",
+        "sibling": "0xc6ef4d774b307509735e615fc756307af6803da3f18edaab5b451ee4cd6aa73f"
+      },
+      {
+        "position": "left",
+        "sibling": "0xb4ece3c67494d9e7289efe8829d0ded4f711e187abbcd001f7d57455e43e0ef9"
+      },
+      {
+        "position": "right",
+        "sibling": "0x4bf6633655563e25e847f3710cefcecd591c4bbf376d7711eeb4269b4f1525c8"
+      }
+    ],
+    [
+      {
+        "position": "left",
+        "sibling": "0x7ab8073c844ab9cf9896ce0b40c041022f8faf26209413368b0d3da992ffb178"
+      },
+      {
+        "position": "left",
+        "sibling": "0xb4ece3c67494d9e7289efe8829d0ded4f711e187abbcd001f7d57455e43e0ef9"
+      },
+      {
+        "position": "right",
+        "sibling": "0x4bf6633655563e25e847f3710cefcecd591c4bbf376d7711eeb4269b4f1525c8"
+      }
+    ],
+    [
+      {
+        "position": "right",
+        "sibling": "0x45072e039349078c4f43085ea1599fd94b99e163edf7d55308d2b2c39341d852"
+      },
+      {
+        "position": "right",
+        "sibling": "0x14e8016d6c29d9398e6ff2a119246dbba9072612499c6063f22464ba8296bed3"
+      },
+      {
+        "position": "left",
+        "sibling": "0x0c3fafeba79f8aab0ce8778bd33ad1e128abe570ae1f2045669b26ec62931693"
+      }
+    ],
+    [
+      {
+        "position": "left",
+        "sibling": "0xf51417a022266141013fd6a43425a9b919c862184f1d1f12915175b0603fe887"
+      },
+      {
+        "position": "right",
+        "sibling": "0x14e8016d6c29d9398e6ff2a119246dbba9072612499c6063f22464ba8296bed3"
+      },
+      {
+        "position": "left",
+        "sibling": "0x0c3fafeba79f8aab0ce8778bd33ad1e128abe570ae1f2045669b26ec62931693"
+      }
+    ],
+    [
+      {
+        "position": "right",
+        "sibling": "0x184ad85facbca58c1e0dcf5044a90b18f2d82f6c751f604f39184cd0e7f8e96d"
+      },
+      {
+        "position": "left",
+        "sibling": "0x6e7b4b5e99051e1ea8521c51152c769c26ca70a711b1419db2d96d72ad6d6b20"
+      },
+      {
+        "position": "left",
+        "sibling": "0x0c3fafeba79f8aab0ce8778bd33ad1e128abe570ae1f2045669b26ec62931693"
+      }
+    ],
+    [
+      {
+        "position": "left",
+        "sibling": "0x3e9d480a16d73fe1c43efea280e24d760eb97470f53a0b5e7344bfafaecd0a0b"
+      },
+      {
+        "position": "left",
+        "sibling": "0x6e7b4b5e99051e1ea8521c51152c769c26ca70a711b1419db2d96d72ad6d6b20"
+      },
+      {
+        "position": "left",
+        "sibling": "0x0c3fafeba79f8aab0ce8778bd33ad1e128abe570ae1f2045669b26ec62931693"
+      }
+    ]
+  ],
+  "ratings_table": [
+    {
+      "justification": "",
+      "proof": [
+        {
+          "position": "right",
+          "sibling": "0xa774571423623800d2bcf8e3cb1679914ddceff407e06b1b084a57af1da213d8"
+        }
+      ],
+      "ratee_id": "dcfa4379c031c4a92f131135c060e09f",
+      "rater_id": "6597c709a6575f75052f0ab798b184f9",
+      "rating": 0.85,
+      "raw_output_hash": "0x11",
+      "task_id": "task_1",
+      "timestamp": "2026-10-20T18:17:22.344894+00:00"
+    },
+    {
+      "justification": "",
+      "proof": [
+        {
+          "position": "left",
+          "sibling": "0x75b073e469d01b8ba5bdaf6b628aa0869f919019eb0e48ac2923730fd449245c"
+        }
+      ],
+      "ratee_id": "6597c709a6575f75052f0ab798b184f9",
+      "rater_id": "dcfa4379c031c4a92f131135c060e09f",
+      "rating": 0.8,
+      "raw_output_hash": "0x22",
+      "task_id": "task_1",
+      "timestamp": "2026-10-20T18:17:22.344894+00:00"
+    }
+  ],
+  "records": [
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 1,
+      "difficulty_weight": 0.357143,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 1,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 1.0,
+      "raw_output_hash": "d1dd56b769b34446e6af9d5c3af3864ecfc3543aa990db6861cbf2fc6241e495",
+      "task_id": "humaneval/HumanEval_0",
+      "tests_passed": 1,
+      "tests_total": 1,
+      "timestamp": "2026-10-20T17:06:27.210640"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 2,
+      "difficulty_weight": 0.357143,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 2,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": false,
+      "quality_score": 0.0,
+      "raw_output_hash": "078834a4b6bc8da88740d323e9c1fd3e3ac5fc4d2957ee1da462dbfc052fa093",
+      "task_id": "humaneval/HumanEval_0",
+      "tests_passed": 0,
+      "tests_total": 1,
+      "timestamp": "2026-10-12T14:48:42.248971"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 1,
+      "difficulty_weight": 0.357143,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 3,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 0.8,
+      "raw_output_hash": "",
+      "task_id": "humaneval/HumanEval_1",
+      "tests_passed": 8,
+      "tests_total": 10,
+      "timestamp": "2026-10-12T14:12:37.341745"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 2,
+      "difficulty_weight": 0.357143,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 4,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": false,
+      "quality_score": 0.2,
+      "raw_output_hash": "",
+      "task_id": "humaneval/HumanEval_1",
+      "tests_passed": 2,
+      "tests_total": 10,
+      "timestamp": "2026-10-09T18:45:54.723585"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 1,
+      "difficulty_weight": 0.285714,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 5,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 0.9,
+      "raw_output_hash": "",
+      "task_id": "humaneval/HumanEval_2",
+      "tests_passed": 9,
+      "tests_total": 10,
+      "timestamp": "2026-10-10T15:59:37.834404"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 2,
+      "difficulty_weight": 0.285714,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 6,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 0.8,
+      "raw_output_hash": "",
+      "task_id": "humaneval/HumanEval_2",
+      "tests_passed": 8,
+      "tests_total": 10,
+      "timestamp": "2026-10-02T03:07:04.603282"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 1,
+      "difficulty_weight": 0.5,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 7,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 1.0,
+      "raw_output_hash": "9335210b04efaed09261a8a293628cbe6f7c6106ee5d0fd9b7b10d7ffb01bda3",
+      "task_id": "humaneval/HumanEval_3",
+      "tests_passed": 1,
+      "tests_total": 1,
+      "timestamp": "2026-10-12T23:36:06.805836"
+    },
+    {
+      "agent_id": "6597c709a6575f75052f0ab798b184f9",
+      "attempt": 2,
+      "difficulty_weight": 0.5,
+      "epoch": 1,
+      "family": [
+        "unknown",
+        "unknown"
+      ],
+      "id": 8,
+      "leaf_version": 2,
+      "params_hash": "b97dcbe3615aac2ac9065aa4dbdd4c717d7507e823b6f3955874e5ea2f37f4ae",
+      "passed": true,
+      "quality_score": 1.0,
+      "raw_output_hash": "7d903da9b13d542af2acb7d60a381dccec9b3ce54f6d276dceb7b19f3db92621",
+      "task_id": "humaneval/HumanEval_3",
+      "tests_passed": 1,
+      "tests_total": 1,
+      "timestamp": "2026-10-14T06:03:19.034527"
+    }
+  ]
+}

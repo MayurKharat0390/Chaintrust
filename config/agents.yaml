@@ -108,6 +108,19 @@ agents:
 
   # ── Ollama (local models, no API key needed) ───────────────
   # Requires: ollama serve && ollama pull <model>
+  - name: "llama32-ollama-local"
+    provider: ollama
+    model: "llama3.2:latest"
+    system_prompt: >
+      You are an expert Python programmer.
+      When given a coding problem, output ONLY a Python code block
+      containing the complete function implementation.
+      Do not include any explanation outside the code block.
+    temperature: 0.2
+    max_tokens: 1024
+    stake: 10
+    enabled: true
+
   - name: "qwen25-coder-ollama"
     provider: ollama
     model: "qwen2.5-coder:7b"

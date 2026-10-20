@@ -491,10 +491,128 @@ class TraceRankScorer(BaseReputation):
         return current_scores
 
 
+class EloScorer(BaseReputation):
+    """
+    Computes pairwise Elo tournament ratings across shared benchmark tasks.
+    Pairwise outcomes update agent ratings with K-factor=32, normalized to [0, 1].
+    """
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        super().__init__("elo", config)
+        self.k_factor = float(self.config.get("k_factor", 32.0))
+        self.base_rating = float(self.config.get("base_rating", 1500.0))
+
+    def compute(
+        self,
+        interactions: Sequence[Any],
+        agents: Sequence[Any],
+        task_difficulties: Optional[Dict[str, float]] = None,
+        reference_time: Optional[datetime] = None,
+    ) -> Dict[str, float]:
+        agent_ids = sorted([getattr(ag, "agent_id", None) or ag.get("agent_id") for ag in agents])
+        if not agent_ids:
+            return {}
+
+        ratings: Dict[str, float] = {aid: self.base_rating for aid in agent_ids}
+
+        # Group interactions by task: task_performances[task_id][agent_id] = quality
+        task_performances: Dict[str, Dict[str, float]] = {}
+        for inter in interactions:
+            aid = getattr(inter, "agent_id", None) or inter.get("agent_id")
+            tid = getattr(inter, "task_id", None) or inter.get("task_id")
+            q = float(getattr(inter, "quality_score", None) if getattr(inter, "quality_score", None) is not None else (inter.get("quality_score", 0.0) if isinstance(inter, dict) else 0.0))
+            if tid not in task_performances:
+                task_performances[tid] = {}
+            # Take max quality if multiple attempts
+            task_performances[tid][aid] = max(task_performances[tid].get(aid, 0.0), q)
+
+        # Process pairwise matches deterministically
+        for tid in sorted(task_performances.keys()):
+            perf = task_performances[tid]
+            contenders = sorted([aid for aid in perf.keys() if aid in ratings])
+            for i in range(len(contenders)):
+                for j in range(i + 1, len(contenders)):
+                    a = contenders[i]
+                    b = contenders[j]
+                    qa = perf[a]
+                    qb = perf[b]
+
+                    if qa > qb:
+                        sa, sb = 1.0, 0.0
+                    elif qa < qb:
+                        sa, sb = 0.0, 1.0
+                    else:
+                        sa, sb = 0.5, 0.5
+
+                    ra = ratings[a]
+                    rb = ratings[b]
+                    ea = 1.0 / (1.0 + 10.0 ** ((rb - ra) / 400.0))
+                    eb = 1.0 / (1.0 + 10.0 ** ((ra - rb) / 400.0))
+
+                    ratings[a] += self.k_factor * (sa - ea)
+                    ratings[b] += self.k_factor * (sb - eb)
+
+        # Min-max scale to [0, 1]
+        vals = [ratings[aid] for aid in agent_ids]
+        min_r = min(vals) if vals else self.base_rating
+        max_r = max(vals) if vals else self.base_rating
+
+        results: Dict[str, float] = {}
+        if max_r > min_r:
+            for aid in agent_ids:
+                results[aid] = float((ratings[aid] - min_r) / (max_r - min_r))
+        else:
+            for aid in agent_ids:
+                results[aid] = 0.5
+        return results
+
+
+class BetaReputationScorer(BaseReputation):
+    """
+    Computes reputation using a Bayesian Beta distribution model Beta(alpha, beta).
+    Prior: alpha=1.0, beta=1.0.
+    For each interaction, alpha += q, beta += (1 - q).
+    Expected value score = alpha / (alpha + beta) in [0, 1].
+    """
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        super().__init__("beta", config)
+        self.prior_alpha = float(self.config.get("prior_alpha", 1.0))
+        self.prior_beta = float(self.config.get("prior_beta", 1.0))
+
+    def compute(
+        self,
+        interactions: Sequence[Any],
+        agents: Sequence[Any],
+        task_difficulties: Optional[Dict[str, float]] = None,
+        reference_time: Optional[datetime] = None,
+    ) -> Dict[str, float]:
+        agent_ids = sorted([getattr(ag, "agent_id", None) or ag.get("agent_id") for ag in agents])
+        if not agent_ids:
+            return {}
+
+        alphas = {aid: self.prior_alpha for aid in agent_ids}
+        betas = {aid: self.prior_beta for aid in agent_ids}
+
+        for inter in interactions:
+            aid = getattr(inter, "agent_id", None) or inter.get("agent_id")
+            if aid not in alphas:
+                continue
+            q = float(getattr(inter, "quality_score", None) if getattr(inter, "quality_score", None) is not None else (inter.get("quality_score", 0.0) if isinstance(inter, dict) else 0.0))
+            q_clamped = max(0.0, min(1.0, q))
+            alphas[aid] += q_clamped
+            betas[aid] += (1.0 - q_clamped)
+
+        return {
+            aid: float(alphas[aid] / (alphas[aid] + betas[aid]))
+            for aid in agent_ids
+        }
+
+
 def get_scorer(method: str, config: Optional[Dict[str, Any]] = None) -> BaseReputation:
     """Factory function returning the scoring algorithm by name."""
     m = method.lower()
-    if m == "simple_avg":
+    if m in ("simple_avg", "mean"):
         return SimpleAverage(config)
     elif m == "weighted":
         return WeightedHistory(config)
@@ -504,5 +622,12 @@ def get_scorer(method: str, config: Optional[Dict[str, Any]] = None) -> BaseRepu
         return EigenTrustScorer(config)
     elif m == "tracerank":
         return TraceRankScorer(config)
+    elif m == "elo":
+        return EloScorer(config)
+    elif m == "beta":
+        return BetaReputationScorer(config)
+    elif m == "chs":
+        from chaintrust.reputation.chs import CHSScorer
+        return CHSScorer(config)
     else:
         raise ValueError(f"Unknown reputation scoring method: {method!r}")

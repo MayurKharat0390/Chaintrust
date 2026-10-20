@@ -153,15 +153,27 @@ Each agent is identified by `agent_id = SHA-256(canonical_JSON(config))[:32]`.  
 ### Difficulty weight (`d_t`)
 Computed by the reputation engine as `1 − pass_fraction(task_t)`, with Laplace smoothing and clipped to `[0.1, 1.0]`.  A task that no agent has passed gets difficulty ≈ 1.0; a task everyone passes gets ≈ 0.1.  This is computed from observed data, never hand-set.
 
-### TraceRank formula
+### CHS (ChainTrust Hybrid Score)
 ```
-w_i     = d_t × exp(−λ × age_days) × rater_trust
-score_a = Σ(quality_i × w_i) / Σ(w_i)   × consistency_multiplier
+CHS_a = round( C_a^omega * [ (1 - w) * D'_a + w * T~_a ] * (1 - pi_a), 6 )
 ```
-All parameters are in `config.yaml → reputation.tracerank`.
+Where:
+- $D'_a$: Direct evidence with Bayesian shrinkage ($m = 5.0$) against family-deduplicated task hardness ($d_t$).
+- $C_a$: Output consistency confidence factor ($1 - \sigma_a$).
+- $\tilde{T}_a$: Peer-review trust propagation under capped stake ($S_{\text{cap}} = 1000$).
+- $\pi_a$: Collusion ring defense penalty detecting mutual reviews and rater concentration (cap $\pi_{\max} = 0.8$).
+- All parameters loaded from versioned `config/chs_params.yaml`.
 
-### Merkle anchoring
-Each interaction is serialised to canonical JSON (sorted keys, keccak256 hashed) to produce a Merkle leaf.  Leaves are ordered by interaction ID.  Odd-count trees duplicate the last leaf (documented in `chaintrust/anchoring/`).  The Merkle root and score hash are committed to the smart contract, making the claimed score tamper-evident.
+### Known Limitations
+1. **Family Rule Trade-off**: Deduping by model family prefix penalizes legitimate variants of one architecture (e.g. `llama-3-8b` and `llama-3-70b`).
+2. **Cross-Model Sybil Attack**: Attackers deploying distinct models per identity bypass family splitting, but incur real compute/API costs.
+3. **Sample Size**: Requires $n_a \ge 5$ tasks to overcome shrinkage dampening.
+4. **Level B Graph Requirement**: Level B verification requires the epoch's peer ratings table to reconstruct trust propagation.
+
+### Merkle Anchoring & Offline Verification
+Each interaction is serialised to canonical JSON (sorted keys, keccak256 hashed) to produce a Merkle leaf (`leaf_version=2`). Standalone offline verification supports two tiers:
+- **Level A**: Validates execution records, inclusion proofs, task difficulty root, parameters hash, and direct score recomputation.
+- **Level B**: Reconstructs peer ratings Merkle tree, trust propagation $\tilde{T}_a$, defense penalty $\pi_a$, and exact composite score recomputation.
 
 ### Grader safety
 Generated code **never runs on the host**.  The grader:
@@ -171,46 +183,40 @@ Generated code **never runs on the host**.  The grader:
 
 ---
 
-## Phase roadmap
+## Phase Roadmap & Running the Pipeline
 
-| Phase | Status | Description |
-|-------|:------:|-------------|
-| 1 | ✅ Done | Registry, task bank, runner, grader, interaction log |
-| 2 | ✅ Done | Reputation engine (5 methods incl. TraceRank) |
-| 3 | ✅ Done | Merkle anchoring + Solidity smart contract + Standalone verifier |
-| 4 | ✅ Done | Sybil & collusion attack simulation benchmark suite |
-| 5 | ✅ Done | FastAPI REST backend + Streamlit interactive dashboard |
-
----
-
-## Running Phases 2 – 5
-
-### Phase 2 — Compute Reputation Scores
+### 1. Compute CHS & Multi-Algorithm Reputations
 ```bash
-# Compute scores across all 5 algorithms (TraceRank, EigenTrust, PageRank, Weighted, Simple Avg)
-python -m chaintrust.reputation
+# Compute scores across all algorithms (CHS, TraceRank, Elo, Beta, PageRank, Simple Avg)
+python -m chaintrust.reputation --epoch 1
 
-# Specify epoch or specific methods
-python -m chaintrust.reputation --epoch 1 --methods tracerank eigentrust
+# Display CLI Leaderboard with side-by-side comparison
+python -m chaintrust.reputation --leaderboard
 ```
 
-### Phase 3 — Standalone Cryptographic & Mathematical Verifier
+### 2. Anonymous Peer Review Pipeline
 ```bash
-# Independently verify an audit bundle's Merkle proofs and score recomputation
-python -m chaintrust.verifier data/bundles/bundle_epoch_1_<agent_id>.json
-
-# Include on-chain anchor verification
-python -m chaintrust.verifier data/bundles/bundle_epoch_1_<agent_id>.json --on-chain
+# Execute peer review evaluations with anonymous prompt masking
+python -m chaintrust.runner.peer_review --epoch 1 --reviews-per-agent 3
 ```
 
-### Phase 4 — Run Adversarial Sybil & Collusion Benchmark
+### 3. Standalone Cryptographic & Mathematical Verifier
 ```bash
-# Execute Sybil attack simulations across clone counts (0, 5, 10, 20)
+# Verify Level A & Level B audit bundle without database or network access
+python -m chaintrust.verifier experiments/results/bundle_epoch_1_<agent_id>.audit.json
+
+# Optional: verify on-chain anchor commitment against Ethereum contract
+python -m chaintrust.verifier experiments/results/bundle_epoch_1_<agent_id>.audit.json --on-chain
+```
+
+### 4. Run Empirical Evaluation Suite (Experiments A–F)
+```bash
+# Run full suite: validity, Sybil clones, collusion rings, ablations, sensitivity, tamper detection
 python -m chaintrust.experiments
 ```
-Outputs are generated in `data/experiments/sybil_resilience.json` and `data/experiments/sybil_resilience.csv`.
+Outputs generated in `experiments/results/` (`.csv` and `.png` for Experiments A through F).
 
-### Phase 5 — API & Visualization Dashboard
+### 5. Launch API & Visualization Dashboard
 ```bash
 # Start FastAPI backend service (port 8000)
 uvicorn chaintrust.api.main:app --host 0.0.0.0 --port 8000 --reload
@@ -218,3 +224,4 @@ uvicorn chaintrust.api.main:app --host 0.0.0.0 --port 8000 --reload
 # Launch Streamlit interactive dashboard (port 8501)
 streamlit run chaintrust/dashboard/app.py
 ```
+Open `http://localhost:8000` to view the full WebGL/Three.js Cyber Holo-Chamber, live leaderboard with CHS breakdown, bundle verifier, and empirical evaluation suite.

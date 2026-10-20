@@ -117,7 +117,17 @@ class AgentRegistry:
                     stake       = raw.get("stake", 0),
                 )
 
-                # Upsert: insert or ignore if agent_id already exists
+                # Upsert: check if agent with agent_id or name already exists
+                existing = (
+                    session.query(Agent)
+                    .filter((Agent.agent_id == agent_id) | (Agent.name == raw["name"]))
+                    .first()
+                )
+                if existing:
+                    logger.debug("Agent %s (%s) already registered, skipping insert.", raw["name"], existing.agent_id)
+                    registered.append(existing)
+                    continue
+
                 stmt = (
                     sqlite_insert(Agent)
                     .values(

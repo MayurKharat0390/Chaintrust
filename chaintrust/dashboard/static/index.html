@@ -18,7 +18,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=20261018d">
+    <link rel="stylesheet" href="css/style.css?v=20261018e">
+
+    <!-- Prism.js Syntax Highlighting Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 
     <!-- Three.js 3D Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -49,6 +52,9 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
+                <button id="btnToggleSFX" class="btn btn-outline-info btn-sm rounded-pill px-3" title="Toggle Sci-Fi Synthesizer Audio">
+                    <i class="fa-solid fa-volume-high me-1"></i> <span id="sfxLabel">SFX: ON</span>
+                </button>
                 <button id="btnRecalculate" class="btn btn-ct-primary btn-sm">
                     <i class="fa-solid fa-arrows-rotate me-2"></i>Recalculate Reputations
                 </button>
@@ -156,117 +162,529 @@
 
             <!-- TAB 0: LIVE EXECUTION ARENA & TELEMETRY TERMINAL -->
             <div class="tab-pane fade show active" id="tab-arena" role="tabpanel">
-                <div class="row g-4">
-                    <!-- Left: Control Panel -->
-                    <div class="col-lg-4">
-                        <div class="glass-panel h-100">
-                            <h5 class="text-white mb-2"><i class="fa-solid fa-microchip text-warning me-2"></i>Agent Dispatch Console</h5>
-                            <p class="text-secondary small mb-3">Trigger an autonomous agent on a coding benchmark problem with 100% end-to-end transparent verification.</p>
 
-                            <div class="mb-3">
-                                <label class="small text-secondary fw-bold mb-1">Select AI Agent:</label>
-                                <select id="arenaAgentSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
-                                    <option value="">Loading active agents...</option>
-                                </select>
+                <!-- Agent Quick Ingress & Cybersight Gallery -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                    <div>
+                        <h6 class="text-white fw-bold mb-0"><i class="fa-solid fa-door-open text-info me-2"></i>Agent Ingress Roster — Click to Materialize in 3D</h6>
+                        <span class="small text-secondary">Click any registered agent to summon them into the 3D Cyber Chamber through the warp portal.</span>
+                    </div>
+                    <div id="activeAgentQuickBadge" class="small text-info font-monospace">
+                        <i class="fa-solid fa-circle-dot text-success me-1"></i> System Ready for Ingress
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-4" id="agentQuickRoster">
+                    <!-- Populated dynamically with agent ingress pill cards -->
+                </div>
+
+                <!-- Upper Section: 3D Holo-Chamber (Left) & Dispatch Console (Right) -->
+                <div class="row g-4 mb-4">
+                    <!-- Left: 3D Cybernetic Agent Holo-Chamber -->
+                    <div class="col-lg-7">
+                        <div class="holo-chamber-card h-100 position-relative">
+                            <!-- Sci-Fi Corner Brackets -->
+                            <div class="cyber-bracket cyber-bracket-tl"></div>
+                            <div class="cyber-bracket cyber-bracket-tr"></div>
+                            <div class="cyber-bracket cyber-bracket-bl"></div>
+                            <div class="cyber-bracket cyber-bracket-br"></div>
+
+                            <!-- 3D Chamber HUD Overlay (Top) -->
+                            <div class="holo-hud-top d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span id="agent3dStatusDot" class="status-dot status-dot-cyan"></span>
+                                    <div>
+                                        <span id="agent3dName" class="fw-bold text-white fs-6">gemini-flash-default</span>
+                                        <span id="agent3dPhase" class="badge bg-dark border border-info text-info ms-2">IDLE</span>
+                                    </div>
+                                </div>
+                                <div class="holo-controls d-flex gap-1">
+                                    <button id="btn3dWarpIn" class="holo-hud-btn" title="Trigger Entrance Portal Warp">
+                                        <i class="fa-solid fa-bolt text-warning me-1"></i>Warp In
+                                    </button>
+                                    <button id="btn3dRotate" class="holo-hud-btn active" title="Toggle 360° Auto-Orbit">
+                                        <i class="fa-solid fa-arrows-spin me-1"></i>Orbit
+                                    </button>
+                                    <button id="btn3dReset" class="holo-hud-btn" title="Reset Viewpoint">
+                                        <i class="fa-solid fa-crosshairs me-1"></i>Center
+                                    </button>
+                                    <button id="btn3dInspect" class="holo-hud-btn" title="Focus Core">
+                                        <i class="fa-solid fa-cube me-1"></i>Focus
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="small text-secondary fw-bold mb-1">Select Benchmark Task:</label>
-                                <select id="arenaTaskSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
-                                    <option value="">Loading tasks...</option>
-                                </select>
-                            </div>
+                            <!-- 3D Canvas Viewport -->
+                            <div class="holo-canvas-wrapper position-relative" style="height: 380px; width: 100%; overflow: hidden; background: radial-gradient(circle at center, #07152d 0%, #030611 100%);">
+                                <canvas id="agent-3d-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
 
-                            <div class="p-3 mb-3 rounded-3 bg-dark border border-secondary">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="small text-secondary">Task Target:</span>
-                                    <span id="arenaTaskEntry" class="badge bg-secondary font-monospace">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="small text-secondary">Task Hardness ($d_t$):</span>
-                                    <span id="arenaTaskDiff" class="badge bg-info">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="small text-secondary">Benchmark Source:</span>
-                                    <span id="arenaTaskSource" class="badge bg-primary">-</span>
+                                <!-- Holographic Portal Entrance Banner (Flashes during warp) -->
+                                <div id="warpBanner" class="warp-banner d-none">
+                                    <div class="warp-banner-inner">
+                                        <i class="fa-solid fa-meteor fa-spin me-2 text-warning"></i>
+                                        <span id="warpBannerText">SYSTEM INGRESS: WARP PORTAL ENGAGED</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <button id="btnRunArenaLive" class="btn btn-warning w-100 fw-bold py-2 shadow">
-                                <i class="fa-solid fa-play me-2"></i>Dispatch Agent & Verify Live
-                            </button>
-
-                            <div class="mt-4 pt-3 border-top border-secondary">
-                                <h6 class="text-white small fw-bold mb-2"><i class="fa-solid fa-circle-info text-info me-1"></i>How Scoring Works Live:</h6>
-                                <ol class="small text-secondary ps-3 mb-0" style="font-size: 0.8rem; line-height: 1.4;">
-                                    <li>Agent generates Python code for the problem.</li>
-                                    <li>Hidden unit tests execute in sandbox.</li>
-                                    <li>Score is weighted by task difficulty ($d_t$).</li>
-                                    <li>Agent TraceRank & rank re-align in real time!</li>
-                                </ol>
+                            <!-- 3D Chamber HUD Overlay (Bottom) -->
+                            <div class="holo-hud-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center px-3 py-2 border-top border-secondary border-opacity-25 bg-dark bg-opacity-75 small font-monospace">
+                                <div class="text-secondary" id="agent3dTelemetry">
+                                    <span class="text-info"><i class="fa-solid fa-microchip me-1"></i>Provider: <span id="telemetryProvider" class="text-white">gemini</span></span> | 
+                                    <span class="text-info"><i class="fa-solid fa-shield me-1"></i>Stake: <span id="telemetryStake" class="text-white">10 CT</span></span> | 
+                                    <span class="text-info"><i class="fa-solid fa-gauge me-1"></i>Core Spin: <span id="telemetrySpin" class="text-white">Calm</span></span>
+                                </div>
+                                <div class="text-secondary mt-1 mt-md-0" style="font-size: 0.75rem;">
+                                    <i class="fa-solid fa-hand-pointer text-info me-1"></i>Drag to rotate 360° &bull; Scroll to zoom
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right: Live Execution & Telemetry Terminal -->
-                    <div class="col-lg-8">
-                        <div class="glass-panel h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h5 class="text-white mb-0"><i class="fa-solid fa-terminal text-success me-2"></i>Live Execution Telemetry</h5>
-                                    <span class="small text-secondary">Real-time transparent view into agent prompts, code, test results, and cryptographic proof.</span>
-                                </div>
-                                <div id="arenaStatusBadge">
-                                    <span class="badge bg-secondary px-3 py-2">IDLE</span>
-                                </div>
-                            </div>
+                    <!-- Right: Agent Dispatch & Benchmark Target Console -->
+                    <div class="col-lg-5">
+                        <div class="glass-panel h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="text-white mb-2"><i class="fa-solid fa-microchip text-warning me-2"></i>Agent Dispatch Console</h5>
+                                <p class="text-secondary small mb-3">Deploy the summoned agent into the isolated execution sandbox on live coding benchmarks.</p>
 
-                            <!-- Execution Pipeline Stepper -->
-                            <div class="row g-2 mb-3 text-center">
-                                <div class="col-3">
-                                    <div id="stepPrompt" class="p-2 rounded bg-dark border border-secondary text-secondary small">
-                                        <i class="fa-solid fa-paper-plane mb-1 d-block"></i>1. Prompt
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="small text-secondary fw-bold mb-1">Active AI Agent:</label>
+                                    <select id="arenaAgentSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
+                                        <option value="">Loading active agents...</option>
+                                    </select>
                                 </div>
-                                <div class="col-3">
-                                    <div id="stepGen" class="p-2 rounded bg-dark border border-secondary text-secondary small">
-                                        <i class="fa-solid fa-code mb-1 d-block"></i>2. Code Gen
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div id="stepGrade" class="p-2 rounded bg-dark border border-secondary text-secondary small">
-                                        <i class="fa-solid fa-vial-circle-check mb-1 d-block"></i>3. Grader
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div id="stepRank" class="p-2 rounded bg-dark border border-secondary text-secondary small">
-                                        <i class="fa-solid fa-award mb-1 d-block"></i>4. TraceRank
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Telemetry Console Display -->
-                            <div class="card bg-black border-secondary text-light font-monospace p-3 mb-3" style="min-height: 260px; max-height: 380px; overflow-y: auto; font-size: 0.82rem;" id="arenaTerminal">
-                                <div class="text-secondary">// Ready for execution. Select an agent and task, then click Dispatch.</div>
-                            </div>
+                                <div class="mb-3">
+                                    <label class="small text-secondary fw-bold mb-1">Select Benchmark Task:</label>
+                                    <select id="arenaTaskSelect" class="form-select bg-dark text-white border-secondary form-select-sm">
+                                        <option value="">Loading tasks...</option>
+                                    </select>
+                                </div>
 
-                            <!-- Metrics & Cryptographic Proof Footer -->
-                            <div id="arenaProofBox" class="p-3 rounded-3 bg-dark bg-opacity-75 border border-secondary d-none">
-                                <div class="row g-2 small">
-                                    <div class="col-md-6">
-                                        <span class="text-secondary">Raw Output SHA-256:</span><br>
-                                        <span id="arenaOutputHash" class="text-warning font-monospace text-break" style="font-size: 0.75rem;">-</span>
+                                <div class="p-3 mb-3 rounded-3 bg-dark border border-secondary">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-secondary">Target Function:</span>
+                                        <span id="arenaTaskEntry" class="badge bg-secondary font-monospace">-</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <span class="text-secondary">Merkle Leaf Commitment (keccak256):</span><br>
-                                        <span id="arenaMerkleLeaf" class="text-info font-monospace text-break" style="font-size: 0.75rem;">-</span>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-secondary">Task Hardness ($d_t$):</span>
+                                        <span id="arenaTaskDiff" class="badge bg-info">-</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-secondary">Benchmark Source:</span>
+                                        <span id="arenaTaskSource" class="badge bg-primary">-</span>
                                     </div>
                                 </div>
                             </div>
 
+                            <div>
+                                <button id="btnRunArenaLive" class="btn btn-warning w-100 fw-bold py-3 shadow fs-6 btn-dispatch-glow">
+                                    <i class="fa-solid fa-play me-2"></i>Dispatch Agent & Verify Live
+                                </button>
+
+                                <div class="mt-3 pt-2 border-top border-secondary text-secondary small d-flex justify-content-between" style="font-size: 0.78rem;">
+                                    <span><i class="fa-solid fa-lock text-success me-1"></i>Docker Isolated</span>
+                                    <span><i class="fa-solid fa-network-wired text-info me-1"></i>Merkle Anchored</span>
+                                    <span><i class="fa-solid fa-award text-warning me-1"></i>TraceRank Scored</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Lower Section: Execution Stepper & Interactive Code Studio -->
+                <div class="glass-panel mb-4">
+                    <!-- Execution Pipeline Stepper -->
+                    <div class="row g-2 mb-4 text-center">
+                        <div class="col-3">
+                            <div id="stepPrompt" class="stepper-step p-2 rounded bg-dark border border-secondary text-secondary small">
+                                <i class="fa-solid fa-paper-plane mb-1 d-block"></i>1. Prompt Injection
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div id="stepGen" class="stepper-step p-2 rounded bg-dark border border-secondary text-secondary small">
+                                <i class="fa-solid fa-code mb-1 d-block"></i>2. Neural Synthesis
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div id="stepGrade" class="stepper-step p-2 rounded bg-dark border border-secondary text-secondary small">
+                                <i class="fa-solid fa-vial-circle-check mb-1 d-block"></i>3. Docker Grader
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div id="stepRank" class="stepper-step p-2 rounded bg-dark border border-secondary text-secondary small">
+                                <i class="fa-solid fa-award mb-1 d-block"></i>4. TraceRank & Anchor
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Studio Multi-View Navigation -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                        <ul class="nav nav-tabs nav-tabs-cyber border-bottom-0" id="studioTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-prompt-btn" data-bs-toggle="tab" data-bs-target="#studio-prompt" type="button" role="tab">
+                                    <i class="fa-solid fa-brain text-info me-1"></i>Prompt &amp; Workflow
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tab-code-btn" data-bs-toggle="tab" data-bs-target="#studio-code" type="button" role="tab">
+                                    <i class="fa-brands fa-python text-warning me-1"></i>Interactive Code Studio
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-compare-btn" data-bs-toggle="tab" data-bs-target="#studio-compare" type="button" role="tab">
+                                    <i class="fa-solid fa-code-compare text-success me-1"></i>Standard vs Agent &amp; Critique
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-tests-btn" data-bs-toggle="tab" data-bs-target="#studio-tests" type="button" role="tab">
+                                    <i class="fa-solid fa-shield-halved text-info me-1"></i>Sandbox Test Harness
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-terminal-btn" data-bs-toggle="tab" data-bs-target="#studio-terminal" type="button" role="tab">
+                                    <i class="fa-solid fa-terminal text-success me-1"></i>Telemetry Terminal
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-proof-btn" data-bs-toggle="tab" data-bs-target="#studio-proof" type="button" role="tab">
+                                    <i class="fa-solid fa-link text-warning me-1"></i>Merkle Proof
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div id="arenaStatusBadge">
+                            <span class="badge bg-secondary px-3 py-2">READY FOR EXECUTION</span>
+                        </div>
+                    </div>
+
+                    <!-- Studio Tab Content Panes -->
+                    <div class="tab-content" id="studioTabContent">
+
+                        <!-- TAB: PROMPT & AGENT WORKFLOW INSPECTOR -->
+                        <div class="tab-pane fade" id="studio-prompt" role="tabpanel">
+                            <div class="d-flex flex-column gap-3">
+                                <!-- Task Plain-English Summary & Specs -->
+                                <div class="p-3 rounded-3 bg-dark bg-opacity-75 border border-info border-opacity-50">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="badge bg-info text-dark font-monospace fw-bold"><i class="fa-solid fa-bullseye me-1"></i>BENCHMARK TASK SUMMARY</span>
+                                            <span id="promptTaskIdBadge" class="badge bg-dark border border-secondary font-monospace text-warning">HumanEval/0</span>
+                                        </div>
+                                        <div class="small text-secondary font-monospace">
+                                            Target Entry: <span id="promptTargetEntry" class="text-info fw-bold">has_close_elements</span> |
+                                            Hardness: <span id="promptTaskHardness" class="text-warning">0.40</span>
+                                        </div>
+                                    </div>
+                                    <p id="promptTaskDocstring" class="text-light small mb-2 fst-italic" style="line-height: 1.5;">
+                                        Check if in given list of numbers, are any two numbers closer to each other than given threshold.
+                                    </p>
+                                    <div class="row g-2 mt-1 font-monospace" style="font-size: 0.78rem;">
+                                        <div class="col-md-6">
+                                            <div class="p-2 rounded bg-black border border-secondary border-opacity-50 text-secondary">
+                                                <i class="fa-solid fa-arrow-right-to-bracket text-info me-1"></i><strong>Expected Inputs:</strong> <span id="promptExpectedInput" class="text-white">List of floating point numbers, float threshold</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="p-2 rounded bg-black border border-secondary border-opacity-50 text-secondary">
+                                                <i class="fa-solid fa-arrow-right-from-bracket text-success me-1"></i><strong>Expected Return:</strong> <span id="promptExpectedReturn" class="text-white">Boolean (True / False)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Agent Workflow Behind-The-Scenes Pipeline -->
+                                <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary">
+                                    <h6 class="text-white small fw-bold mb-3">
+                                        <i class="fa-solid fa-gears text-warning me-2"></i>WHAT ELSE IS THE AGENT DOING? (EXECUTION AUDIT TRAIL)
+                                    </h6>
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <div class="p-2 rounded bg-black border border-secondary h-100">
+                                                <div class="d-flex justify-content-between text-secondary small font-monospace mb-1">
+                                                    <span>1. Ingress & Context</span>
+                                                    <i class="fa-solid fa-code text-info"></i>
+                                                </div>
+                                                <div class="small text-white fw-bold">Prompt Assembly</div>
+                                                <div class="text-secondary" style="font-size: 0.75rem;">
+                                                    In: <span id="traceTokensIn" class="text-info">~180 tokens</span> | Zero-Shot Docstring injection
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-2 rounded bg-black border border-secondary h-100">
+                                                <div class="d-flex justify-content-between text-secondary small font-monospace mb-1">
+                                                    <span>2. Synthesis & AST</span>
+                                                    <i class="fa-solid fa-microchip text-warning"></i>
+                                                </div>
+                                                <div class="small text-white fw-bold">Neural Output & AST</div>
+                                                <div class="text-secondary" style="font-size: 0.75rem;">
+                                                    Out: <span id="traceTokensOut" class="text-warning">~90 tokens</span> | <span id="traceLatency" class="text-white">0.82s</span> latency | <code>ast.parse()</code>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-2 rounded bg-black border border-secondary h-100">
+                                                <div class="d-flex justify-content-between text-secondary small font-monospace mb-1">
+                                                    <span>3. Sandbox & Proof</span>
+                                                    <i class="fa-solid fa-shield-halved text-success"></i>
+                                                </div>
+                                                <div class="small text-white fw-bold">Docker & Merkle Root</div>
+                                                <div class="text-secondary" style="font-size: 0.75rem;">
+                                                    <code>--network none</code> | Keccak-256 leaf commitment
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dual Prompt View (System Prompt & User Prompt) -->
+                                <div class="row g-3">
+                                    <div class="col-lg-5">
+                                        <div class="card bg-black border-secondary h-100">
+                                            <div class="card-header bg-dark bg-opacity-75 border-secondary py-2 d-flex justify-content-between align-items-center">
+                                                <span class="small fw-bold text-info"><i class="fa-solid fa-robot me-1"></i>System Prompt</span>
+                                                <span class="badge bg-secondary" style="font-size: 0.7rem;">Injected Role</span>
+                                            </div>
+                                            <div class="card-body p-2 font-monospace" style="max-height: 240px; overflow-y: auto; font-size: 0.78rem;">
+                                                <pre id="promptSystemPromptText" class="text-secondary mb-0" style="white-space: pre-wrap;">You are an autonomous AI software engineer. Generate clean, bug-free, and optimal Python code fulfilling the exact docstring specifications.</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="card bg-black border-secondary h-100">
+                                            <div class="card-header bg-dark bg-opacity-75 border-secondary py-2 d-flex justify-content-between align-items-center">
+                                                <span class="small fw-bold text-warning"><i class="fa-solid fa-terminal me-1"></i>Injected User Task Prompt</span>
+                                                <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="navigator.clipboard.writeText(document.getElementById('promptFullPromptText').innerText); showToast('Prompt copied to clipboard!', 'info');" style="font-size: 0.72rem;">
+                                                    <i class="fa-solid fa-copy me-1"></i>Copy Prompt
+                                                </button>
+                                            </div>
+                                            <div class="card-body p-2 font-monospace" style="max-height: 240px; overflow-y: auto; font-size: 0.78rem;">
+                                                <pre id="promptFullPromptText" class="text-light mb-0" style="white-space: pre-wrap;">Awaiting agent dispatch...</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: STANDARD VS AGENT & CRITIQUE -->
+                        <div class="tab-pane fade" id="studio-compare" role="tabpanel">
+                            <div class="d-flex flex-column gap-3">
+                                <!-- Automated Critique Scorecard -->
+                                <div class="row g-3">
+                                    <!-- What Went Right -->
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded-3 bg-dark bg-opacity-75 border border-success border-opacity-50 h-100">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h6 class="text-success fw-bold mb-0">
+                                                    <i class="fa-solid fa-circle-check me-2"></i>WHAT THE AGENT DID RIGHT
+                                                </h6>
+                                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" id="critiqueRightBadge">Passing</span>
+                                            </div>
+                                            <ul id="critiqueRightList" class="small text-light ps-3 mb-0 d-flex flex-column gap-1">
+                                                <li>Synthesized syntactically valid Python code passing AST validation.</li>
+                                                <li>Correct function signature matching benchmark specification.</li>
+                                                <li>Executed inside isolated Docker container within safety constraints.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- What Went Wrong / Areas for Improvement -->
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded-3 bg-dark bg-opacity-75 border border-warning border-opacity-50 h-100">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h6 class="text-warning fw-bold mb-0">
+                                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>WHAT WENT WRONG / CRITIQUE
+                                                </h6>
+                                                <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50" id="critiqueWrongBadge">Review</span>
+                                            </div>
+                                            <ul id="critiqueWrongList" class="small text-light ps-3 mb-0 d-flex flex-column gap-1">
+                                                <li class="text-secondary">Run an execution to generate the automated diagnostic critique comparing the code to ground-truth standards.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Side-by-Side Code Comparison Windows -->
+                                <div class="row g-3">
+                                    <!-- Canonical Standard Reference Solution -->
+                                    <div class="col-md-6">
+                                        <div class="code-studio-window rounded-3 border border-secondary overflow-hidden h-100">
+                                            <div class="code-editor-header d-flex justify-content-between align-items-center px-3 py-2 bg-dark border-bottom border-secondary">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge bg-success font-monospace"><i class="fa-solid fa-award me-1"></i>Canonical Standard</span>
+                                                    <span class="badge bg-dark border border-secondary text-secondary small">Ground Truth</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="navigator.clipboard.writeText(document.getElementById('compareStandardCode').innerText); showToast('Standard code copied!', 'info');" style="font-size: 0.72rem;">
+                                                    <i class="fa-solid fa-copy me-1"></i>Copy
+                                                </button>
+                                            </div>
+                                            <div class="code-container bg-black p-3 font-monospace" style="min-height: 250px; max-height: 340px; overflow-y: auto;">
+                                                <pre class="language-python mb-0"><code id="compareStandardCode" class="language-python text-light">// Canonical reference solution will display here upon dispatch...</code></pre>
+                                            </div>
+                                            <div class="px-3 py-2 bg-dark bg-opacity-75 border-top border-secondary small text-secondary font-monospace d-flex justify-content-between">
+                                                <span><i class="fa-solid fa-check-double text-success me-1"></i>HumanEval Verified Standard</span>
+                                                <span class="text-success">Score: 1.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Agent's Generated Solution -->
+                                    <div class="col-md-6">
+                                        <div class="code-studio-window rounded-3 border border-secondary overflow-hidden h-100">
+                                            <div class="code-editor-header d-flex justify-content-between align-items-center px-3 py-2 bg-dark border-bottom border-secondary">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge bg-info font-monospace"><i class="fa-solid fa-microchip me-1"></i>Summoned Agent Code</span>
+                                                    <span id="compareAgentBadge" class="badge bg-dark border border-info text-info small">Active Agent</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="navigator.clipboard.writeText(document.getElementById('compareAgentCode').innerText); showToast('Agent code copied!', 'info');" style="font-size: 0.72rem;">
+                                                    <i class="fa-solid fa-copy me-1"></i>Copy
+                                                </button>
+                                            </div>
+                                            <div class="code-container bg-black p-3 font-monospace" style="min-height: 250px; max-height: 340px; overflow-y: auto;">
+                                                <pre class="language-python mb-0"><code id="compareAgentCode" class="language-python text-light">// Agent synthesized code will display here...</code></pre>
+                                            </div>
+                                            <div class="px-3 py-2 bg-dark bg-opacity-75 border-top border-secondary small text-secondary font-monospace d-flex justify-content-between">
+                                                <span id="compareAgentStatus"><i class="fa-solid fa-circle-notch fa-spin text-info me-1"></i>Awaiting Dispatch</span>
+                                                <span id="compareAgentScore" class="text-info">Score: -</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB A: INTERACTIVE CODE STUDIO -->
+                        <div class="tab-pane fade show active" id="studio-code" role="tabpanel">
+                            <div class="code-studio-window rounded-3 border border-secondary overflow-hidden">
+                                <!-- Code Editor Title Bar -->
+                                <div class="code-editor-header d-flex justify-content-between align-items-center px-3 py-2 bg-dark border-bottom border-secondary">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary font-monospace"><i class="fa-brands fa-python text-warning me-1"></i>solution.py</span>
+                                        <span id="codeLangBadge" class="badge bg-dark border border-secondary text-secondary small">Python 3.11</span>
+                                        <span id="codeTokenBadge" class="badge bg-info bg-opacity-10 border border-info border-opacity-25 text-info small d-none">0 tokens</span>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button id="btnReplayStream" class="btn btn-sm btn-outline-info py-1 px-2" title="Replay code generation streaming animation">
+                                            <i class="fa-solid fa-play me-1"></i>Replay Stream
+                                        </button>
+                                        <button id="btnInstantView" class="btn btn-sm btn-outline-secondary py-1 px-2" title="Show all code instantly">
+                                            <i class="fa-solid fa-bolt me-1"></i>Instant View
+                                        </button>
+                                        <button id="btnCopySnippet" class="btn btn-sm btn-outline-secondary py-1 px-2" title="Copy solution code">
+                                            <i class="fa-solid fa-copy me-1"></i>Copy
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Code Content Display -->
+                                <div class="code-container position-relative bg-black p-3 font-monospace" style="min-height: 260px; max-height: 380px; overflow-y: auto;">
+                                    <pre id="codeDisplayArea" class="language-python mb-0"><code id="codeSnippetCode" class="language-python text-secondary">// Code will materialize here when the agent is dispatched...</code><span id="typingCursor" class="typing-caret d-none">▌</span></pre>
+                                </div>
+
+                                <!-- Code Telemetry Footer -->
+                                <div class="code-editor-footer d-flex justify-content-between align-items-center px-3 py-2 bg-dark bg-opacity-75 border-top border-secondary small text-secondary font-monospace">
+                                    <div>
+                                        <span id="codeLineCount">0 lines</span> | <span id="codeLatency">Latency: -</span> | <span id="codeAstStatus">AST Valid: -</span>
+                                    </div>
+                                    <div class="text-info">
+                                        <i class="fa-solid fa-circle-check text-success me-1"></i>Isolated Grader Syntax Verified
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB B: SANDBOX UNIT TEST HARNESS -->
+                        <div class="tab-pane fade" id="studio-tests" role="tabpanel">
+                            <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-4">
+                                        <div class="p-3 rounded bg-black border border-secondary text-center">
+                                            <div class="small text-secondary mb-1">Test Status</div>
+                                            <h4 id="testSummaryPassed" class="text-success mb-0">- / -</h4>
+                                            <span class="small text-secondary" id="testSummaryLabel">Awaiting Run</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 rounded bg-black border border-secondary text-center">
+                                            <div class="small text-secondary mb-1">Quality Score ($Q$)</div>
+                                            <h4 id="testQualityScore" class="text-info mb-0">-</h4>
+                                            <span class="small text-secondary">Range [0.00, 1.00]</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 rounded bg-black border border-secondary text-center">
+                                            <div class="small text-secondary mb-1">Execution Runtime</div>
+                                            <h4 id="testRuntimeMs" class="text-warning mb-0">- ms</h4>
+                                            <span class="small text-secondary">Docker Container Wall-Clock</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Test Cases Breakdown List -->
+                                <h6 class="text-white small fw-bold mb-2"><i class="fa-solid fa-list-check text-info me-2"></i>Unit Test Assertions Breakdown:</h6>
+                                <div id="testCasesContainer" class="d-flex flex-column gap-2" style="max-height: 220px; overflow-y: auto;">
+                                    <div class="p-2 rounded bg-black border border-secondary text-secondary small font-monospace">
+                                        No tests executed yet. Click 'Dispatch Agent & Verify Live' to run tests in the sandbox.
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 p-2 rounded bg-dark border border-secondary small text-secondary d-flex justify-content-between align-items-center">
+                                    <span><i class="fa-brands fa-docker text-primary me-2"></i>Container Security: <code>--network none --memory 256m --read-only --tmpfs /tmp</code></span>
+                                    <span class="badge bg-success">Sandbox Isolated</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB C: TELEMETRY TERMINAL -->
+                        <div class="tab-pane fade" id="studio-terminal" role="tabpanel">
+                            <div class="card bg-black border-secondary text-light font-monospace p-3" style="min-height: 260px; max-height: 380px; overflow-y: auto; font-size: 0.82rem;" id="arenaTerminal">
+                                <div class="text-secondary">// Ready for execution. Select an agent and task, then click Dispatch.</div>
+                            </div>
+                        </div>
+
+                        <!-- TAB D: CRYPTOGRAPHIC MERKLE COMMITMENT -->
+                        <div class="tab-pane fade" id="studio-proof" role="tabpanel">
+                            <div class="p-4 rounded-3 bg-dark bg-opacity-75 border border-secondary">
+                                <h6 class="text-white fw-bold mb-3"><i class="fa-solid fa-cube text-warning me-2"></i>Cryptographic Merkle Leaf Commitment & On-Chain State</h6>
+                                <p class="text-secondary small mb-3">Every execution produces an immutable Merkle leaf composed of canonical JSON parameters, cryptographically securing the agent's grade against tampering.</p>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded bg-black border border-secondary">
+                                            <span class="small text-secondary">Raw Model Output SHA-256:</span>
+                                            <div id="arenaOutputHash" class="text-warning font-monospace text-break mt-1" style="font-size: 0.8rem;">-</div>
+                                            <button class="btn btn-outline-secondary btn-sm mt-2 py-0 px-2" onclick="navigator.clipboard.writeText(document.getElementById('arenaOutputHash').innerText); showToast('SHA-256 hash copied!', 'info');">
+                                                <i class="fa-solid fa-copy me-1"></i>Copy SHA-256
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded bg-black border border-secondary">
+                                            <span class="small text-secondary">Merkle Leaf Hash (keccak256):</span>
+                                            <div id="arenaMerkleLeaf" class="text-info font-monospace text-break mt-1" style="font-size: 0.8rem;">-</div>
+                                            <button class="btn btn-outline-secondary btn-sm mt-2 py-0 px-2" onclick="navigator.clipboard.writeText(document.getElementById('arenaMerkleLeaf').innerText); showToast('Merkle Leaf hash copied!', 'info');">
+                                                <i class="fa-solid fa-copy me-1"></i>Copy Leaf Hash
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 rounded bg-black border border-secondary d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="small text-secondary">Reputation Impact:</div>
+                                        <div class="fw-bold text-white mt-1">TraceRank: <span id="proofTraceRank" class="text-warning">-</span> | Rank: <span id="proofRankPos" class="badge bg-primary">-</span></div>
+                                    </div>
+                                    <span class="badge bg-success px-3 py-2"><i class="fa-solid fa-check-double me-1"></i>Verified Tamper-Proof</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
             <!-- TAB 1: LEADERBOARD -->
@@ -279,11 +697,12 @@
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <label class="small text-secondary fw-bold text-nowrap">Algorithm:</label>
-                            <select id="selectMethod" class="form-select form-select-sm bg-dark text-white border-secondary" style="min-width: 170px;">
-                                <option value="tracerank" selected>TraceRank (Proprietary)</option>
-                                <option value="eigentrust">EigenTrust</option>
+                            <select id="selectMethod" class="form-select form-select-sm bg-dark text-white border-secondary" style="min-width: 220px;">
+                                <option value="chs" selected>ChainTrust Hybrid Score (CHS)</option>
+                                <option value="tracerank">TraceRank (Original)</option>
+                                <option value="elo">Elo Rating</option>
+                                <option value="beta">Beta Reputation</option>
                                 <option value="pagerank">PageRank</option>
-                                <option value="weighted">Weighted History</option>
                                 <option value="simple_avg">Simple Average</option>
                             </select>
                         </div>
@@ -291,14 +710,16 @@
 
                     <div class="table-responsive">
                         <table class="table table-custom">
-                            <thead>
+                            <thead id="leaderboardHead">
                                 <tr>
                                     <th style="width: 70px;">Rank</th>
                                     <th>Agent Label / ID</th>
-                                    <th>Provider</th>
-                                    <th>Model</th>
-                                    <th>Stake</th>
-                                    <th>Reputation Score</th>
+                                    <th>Provider & Model</th>
+                                    <th>D' (Evidence)</th>
+                                    <th>C_a (Confidence)</th>
+                                    <th>T~ (Trust)</th>
+                                    <th>pi (Defense)</th>
+                                    <th>CHS Score</th>
                                 </tr>
                             </thead>
                             <tbody id="leaderboardBody">
@@ -445,7 +866,9 @@
                             <p class="text-secondary small mb-3">Audits a bundle without needing access to the raw database (Zero-Trust Proof).</p>
 
                             <div class="mb-3">
-                                <label class="small text-secondary fw-bold mb-1">Select Available Audit Bundle:</label>
+                                <label class="small text-secondary fw-bold mb-1"><i class="fa-solid fa-file-arrow-up me-1 text-info"></i>Upload .audit.json Bundle File:</label>
+                                <input type="file" id="bundleFileInput" accept=".json,.audit.json" class="form-control form-control-sm bg-dark text-white border-secondary mb-2">
+                                <div class="text-center small text-secondary my-1">&mdash; OR SELECT FROM REPO BUNDLES &mdash;</div>
                                 <select id="selectBundle" class="form-select bg-dark text-white border-secondary form-select-sm">
                                     <option value="">Loading bundles...</option>
                                 </select>
@@ -515,7 +938,11 @@
     <!-- Chart.js 4.4 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
+    <!-- Prism.js Syntax Highlighting Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
     <!-- Client-side Application Script -->
-    <script src="js/app.js?v=20261018e"></script>
+    <script src="js/app.js?v=20261018f"></script>
 </body>
 </html>

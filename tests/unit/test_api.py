@@ -83,3 +83,55 @@ def test_verify_bundle_endpoint(client, tmp_path):
     assert res["valid"] is True
     assert res["merkle_root_valid"] is True
     assert res["score_recomputed_valid"] is True
+
+
+def test_get_leaderboard_chs_endpoint(client):
+    response = client.get("/api/reputation/leaderboard?method=chs")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+    if data:
+        assert data[0]["method"] == "chs"
+        assert "params_hash" in data[0]
+
+
+def test_get_reputation_comparison_endpoint(client):
+    response = client.get("/api/reputation/comparison")
+    assert response.status_code == 200
+    data = response.json()
+    assert "agents" in data
+    assert "methods" in data
+    assert "spearman_correlation" in data
+    assert "kendall_correlation" in data
+    assert "chs" in data["methods"]
+
+
+def test_get_chs_breakdown_endpoint(client):
+    response = client.get("/api/reputation/chs/breakdown")
+    assert response.status_code == 200
+    data = response.json()
+    assert "epoch" in data
+    assert "params_hash" in data
+    assert "agents" in data
+    assert isinstance(data["agents"], list)
+    if data["agents"]:
+        first = data["agents"][0]
+        assert "d_prime" in first
+        assert "c_a" in first
+        assert "t_tilde" in first
+        assert "pi_a" in first
+        assert "score" in first
+
+
+def test_get_experiments_results_endpoint(client):
+    response = client.get("/api/experiments/results")
+    assert response.status_code == 200
+    data = response.json()
+    assert "experiments" in data
+    assert len(data["experiments"]) >= 6
+    exp_ids = [e["id"] for e in data["experiments"]]
+    assert "experiment_a" in exp_ids
+    assert "experiment_b" in exp_ids
+    assert "experiment_f" in exp_ids
+
+

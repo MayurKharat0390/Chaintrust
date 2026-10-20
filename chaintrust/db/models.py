@@ -219,6 +219,46 @@ class Interaction(Base):
 
 
 # ---------------------------------------------------------------------------
+# Peer review ratings table (Phase 4)
+# ---------------------------------------------------------------------------
+
+class PeerRating(Base):
+    """
+    One peer-review evaluation: rater_id evaluates ratee_id's solution for task_id.
+    Identity of ratee is kept hidden from rater during the review call.
+    Rating ∈ [0.0, 1.0].
+    """
+    __tablename__ = "peer_ratings"
+
+    id              = Column(Integer,     primary_key=True, autoincrement=True)
+    rater_id        = Column(String(64),  ForeignKey("agents.agent_id"), nullable=False)
+    ratee_id        = Column(String(64),  ForeignKey("agents.agent_id"), nullable=False)
+    task_id         = Column(String(64),  ForeignKey("tasks.task_id"),   nullable=False)
+    rating          = Column(Float,       nullable=False,
+                             doc="Peer score ∈ [0.0, 1.0]")
+    justification   = Column(Text,        nullable=True,
+                             doc="Short critique or explanation from the rater")
+    raw_output_hash = Column(String(64),  nullable=True,
+                             doc="SHA-256 hex of the raw peer review LLM response")
+    timestamp       = Column(DateTime(timezone=True), nullable=False,
+                             default=lambda: datetime.now(timezone.utc),
+                             doc="UTC timestamp when the review was conducted")
+
+    # Relationships
+    rater = relationship("Agent", foreign_keys=[rater_id])
+    ratee = relationship("Agent", foreign_keys=[ratee_id])
+    task  = relationship("Task",  foreign_keys=[task_id])
+
+    __table_args__ = (
+        CheckConstraint("rating >= 0.0 AND rating <= 1.0", name="ck_peer_rating_range"),
+    )
+
+    def __repr__(self) -> str:
+        return (f"<PeerRating {self.rater_id[:8]} -> {self.ratee_id[:8]} "
+                f"task={self.task_id!r} rating={self.rating:.2f}>")
+
+
+# ---------------------------------------------------------------------------
 # Reputation table
 # ---------------------------------------------------------------------------
 
@@ -241,6 +281,8 @@ class Reputation(Base):
                              "eigentrust | tracerank")
     score       = Column(Float,      nullable=False,
                          doc="Rounded to config.reputation.rounding_decimals decimals")
+    params_hash = Column(String(64), nullable=True,
+                         doc="SHA-256 of canonical JSON parameter set for deterministic verification")
     computed_at = Column(DateTime(timezone=True), nullable=False,
                          default=lambda: datetime.now(timezone.utc))
 
