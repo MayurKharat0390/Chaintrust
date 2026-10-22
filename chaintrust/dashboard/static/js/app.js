@@ -658,8 +658,9 @@ function renderSybilCharts(data) {
     if (tauChartInstance) tauChartInstance.destroy();
 
     const cloneCounts = data.map(d => d.clone_count);
-    const methods = ["tracerank", "eigentrust", "pagerank", "simple_avg"];
+    const methods = ["chs", "tracerank", "eigentrust", "pagerank", "simple_avg"];
     const colors = {
+        chs: "#f59e0b",
         tracerank: "#38bdf8",
         eigentrust: "#a855f7",
         pagerank: "#10b981",
@@ -2159,22 +2160,22 @@ async function runLiveArenaExecution() {
             log(`  &cross; TESTS FAILED (${grade.tests_passed}/${grade.tests_total}) - Quality: <span class="text-danger fw-bold">${grade.quality_score.toFixed(3)}</span> - Error: ${escapeHtml(grade.error_type || "AssertionError")}`, "text-danger");
         }
 
-        // STEP 4: TraceRank & Cryptography
+        // STEP 4: CHS Primary Reputation & Cryptography
         setArenaStep(3);
         setChamberState("verified");
 
         const rep = data.reputation;
-        const myTraceRank = rep?.scores?.tracerank !== undefined ? rep.scores.tracerank.toFixed(4) : "N/A";
-        const rankPos = rep?.tracerank_rank || "N/A";
+        const myCHS = rep?.scores?.chs !== undefined ? rep.scores.chs.toFixed(4) : (rep?.chs_score !== undefined ? rep.chs_score.toFixed(4) : (rep?.scores?.tracerank !== undefined ? rep.scores.tracerank.toFixed(4) : "N/A"));
+        const rankPos = rep?.chs_rank || rep?.tracerank_rank || "N/A";
 
-        log(`\n[STEP 4: TRACERANK & PROOF COMMITMENT]`, "text-info");
-        log(`  Updated TraceRank Score: <strong class="text-warning fs-6">${myTraceRank}</strong>`);
+        log(`\n[STEP 4: CHS REPUTATION & PROOF COMMITMENT]`, "text-info");
+        log(`  Official CHS Score: <strong class="text-warning fs-6">${myCHS}</strong>`);
         log(`  Global Rank Position: <span class="badge bg-primary">#${rankPos} of ${rep?.total_agents || 6}</span>`);
 
         // Populate Merkle Proof Tab
         document.getElementById("arenaOutputHash").innerText = data.cryptography.raw_output_sha256;
         document.getElementById("arenaMerkleLeaf").innerText = data.cryptography.merkle_leaf_hash;
-        document.getElementById("proofTraceRank").innerText = myTraceRank;
+        document.getElementById("proofTraceRank").innerText = myCHS;
         document.getElementById("proofRankPos").innerText = `#${rankPos} of ${rep?.total_agents || 6}`;
 
         // Populate Standard vs Agent & Critique Tab
@@ -2244,11 +2245,11 @@ async function runLiveArenaExecution() {
         }
 
         statusBadge.innerHTML = `<span class="badge bg-success px-3 py-2"><i class="fa-solid fa-check me-1"></i> VERIFIED & SCORED</span>`;
-        showToast(`Task complete! TraceRank: ${myTraceRank} (Rank #${rankPos})`, "success");
+        showToast(`Task complete! CHS Score: ${myCHS} (Rank #${rankPos})`, "success");
 
         // Refresh Background Leaderboard & Overview
         await Promise.allSettled([
-            loadLeaderboard(document.getElementById("selectMethod")?.value || "tracerank"),
+            loadLeaderboard(document.getElementById("selectMethod")?.value || "chs"),
             loadAlgorithmComparison(),
             fetchOverviewKPIs()
         ]);

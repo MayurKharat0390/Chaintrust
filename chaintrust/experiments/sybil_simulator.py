@@ -46,7 +46,7 @@ class SybilSimulator:
         methods: Optional[Sequence[str]] = None,
     ):
         self.top_k = top_k
-        self.methods = list(methods or ["simple_avg", "weighted", "pagerank", "eigentrust", "tracerank"])
+        self.methods = list(methods or ["chs", "tracerank", "eigentrust", "pagerank", "simple_avg"])
 
     def create_synthetic_honest_population(
         self,

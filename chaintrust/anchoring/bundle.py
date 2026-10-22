@@ -50,7 +50,7 @@ def create_epoch_bundle(
     agent_id: str,
     epoch: int,
     interactions: Sequence[Any],
-    method: str = "tracerank",
+    method: str = "chs",
     score: float = 0.0,
     stake: int = 0,
     output_dir: Optional[str] = None,

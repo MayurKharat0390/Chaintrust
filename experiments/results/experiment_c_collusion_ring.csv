@@ -1,7 +1,7 @@
 method,ring_baseline_score,ring_attack_score,ring_inflation_pct,honest_top_k_preserved
-chs,0.5422,0.3987,-26.46,True
-tracerank,0.5749,0.5749,-0.0,True
-pagerank,0.2251,0.2251,0.0,True
-eigentrust,0.1445,0.1445,0.0,True
-beta,0.656,0.656,0.0,True
-simple_avg,0.6637,0.6637,0.0,True
+chs,0.6127,0.4494,-26.65,False
+tracerank,0.7763,0.7763,0.0,False
+pagerank,0.3729,0.3729,0.0,True
+eigentrust,0.3737,0.3737,0.0,True
+beta,0.7298,0.7298,0.0,False
+simple_avg,0.8162,0.8162,0.0,False

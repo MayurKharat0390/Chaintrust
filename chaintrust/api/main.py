@@ -60,7 +60,7 @@ class ComputeReputationRequest(BaseModel):
 class AnchorRequest(BaseModel):
     agent_id: str
     epoch: int
-    method: str = "tracerank"
+    method: str = "chs"
 
 
 @app.get("/health")
@@ -109,7 +109,7 @@ def get_tasks(limit: int = 50) -> List[Dict[str, Any]]:
 
 @app.get("/api/reputation/leaderboard")
 def get_leaderboard(
-    method: str = Query("tracerank", description="Reputation method"),
+    method: str = Query("chs", description="Primary reputation method (CHS) or baseline"),
     epoch: Optional[int] = Query(None, description="Epoch number"),
 ) -> List[Dict[str, Any]]:
     with get_session() as session:
@@ -370,6 +370,13 @@ def get_sybil_resilience(refresh: bool = False) -> List[Dict[str, Any]]:
         with open(exp_file, "r", encoding="utf-8") as f:
             return json.load(f)
 
+    # Compute fresh Sybil resilience benchmark results
+    results = run_sybil_experiments()
+    return [
+        {"clone_count": r.clone_count, "metrics": r.algorithm_metrics}
+        for r in results
+    ]
+
 class LiveExecuteRequest(BaseModel):
     agent_id: str
     task_id: str
@@ -506,9 +513,9 @@ def execute_task_live(req: LiveExecuteRequest = Body(...)) -> Dict[str, Any]:
             for m in engine.SUPPORTED_METHODS
         }
 
-        # Calculate agent rank in TraceRank
-        tr_scores = new_scores.get("tracerank", {})
-        ranked_agents = sorted(tr_scores.items(), key=lambda x: x[1], reverse=True)
+        # Calculate agent rank in primary method (CHS)
+        chs_scores = new_scores.get("chs", {}) or new_scores.get("tracerank", {})
+        ranked_agents = sorted(chs_scores.items(), key=lambda x: x[1], reverse=True)
         agent_rank = next((idx + 1 for idx, (aid, _) in enumerate(ranked_agents) if aid == agent.agent_id), None)
 
         # Construct Task Summary and Automated Comparison Critique
@@ -601,6 +608,9 @@ def execute_task_live(req: LiveExecuteRequest = Body(...)) -> Dict[str, Any]:
             },
             "reputation": {
                 "scores": agent_scores,
+                "primary_method": "chs",
+                "chs_score": chs_scores.get(agent.agent_id, 0.0),
+                "chs_rank": agent_rank,
                 "tracerank_rank": agent_rank,
                 "total_agents": len(ranked_agents),
             }

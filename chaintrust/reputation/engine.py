@@ -29,15 +29,16 @@ class ReputationEngine:
     Coordinates reputation score calculation across configured algorithms.
     """
 
+    PRIMARY_METHOD = "chs"
     SUPPORTED_METHODS = [
-        "simple_avg",
-        "weighted",
-        "pagerank",
-        "eigentrust",
-        "tracerank",
-        "chs",
+        "chs",          # Primary flagship protocol algorithm
+        "tracerank",    # Comparative research baselines
         "elo",
         "beta",
+        "pagerank",
+        "eigentrust",
+        "weighted",
+        "simple_avg",
     ]
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):

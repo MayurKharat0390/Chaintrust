@@ -1,7 +1,7 @@
 ablation,ring_avg_score,honest_avg_score,collusion_advantage
-Full CHS,0.1278,0.5179,-0.3902
-No Family Split,0.1278,0.5179,-0.3902
-No Shrinkage (m=0),0.1255,0.5255,-0.3999
-No Consistency (w=0),0.153,0.6081,-0.4551
-No Trust Layer (w=0),0.1111,0.5914,-0.4802
-No Defense (pi=0),0.6388,0.5179,0.1209
+Full CHS,0.1472,0.5373,-0.3901
+No Family Split,0.1472,0.5373,-0.3901
+No Shrinkage (m=0),0.1555,0.5051,-0.3497
+No Consistency (w=0),0.1614,0.6305,-0.4691
+No Trust Layer (w=0),0.133,0.6072,-0.4742
+No Defense (pi=0),0.7361,0.5373,0.1988

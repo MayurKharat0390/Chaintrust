@@ -63,9 +63,14 @@ grader:
 # Reputation engine
 # ------------------------------------------------------------------
 reputation:
+  primary_method: "chs"             # Primary protocol scoring algorithm (CHS)
   epoch_size: 50                    # interactions per epoch (or use "daily")
   rounding_decimals: 6              # fixed rounding for determinism
 
+  chs:
+    config_file: "config/chs_params.yaml"
+
+  # Comparative baseline configurations
   tracerank:
     lambda_decay: 0.1               # time-decay rate λ (per day)
     difficulty_min: 0.1
